@@ -1,91 +1,95 @@
-import Task from "./task";
-import Priority from "./priority";
+import Task from './task.js';
 
 class TaskList {
-    #title;
-    #description;
-    #priority;
-    #tasklist;
+  #title;
+  #tasks;
 
-    constructor(title, description='') {
+  constructor(title) {
     // Title validation
     if (typeof title !== 'string' || title.trim() === '') {
-      throw new Error('Task title must be a non-empty string');
+      throw new Error('TaskList title must be a non-empty string');
     }
 
-    // Description validation
-    if (typeof description !== 'string') {
-      throw new Error('Description must be a string');
-    }
+    this.#title = title.trim();
+    this.#tasks = [];
+  }
 
-    this.#title = title;
-    this.#description = description;
-    this.#priority = Priority.NORMAL;
-    this.#tasklist = [];
+  /* ========= Getters ========= */
 
-    }
-
-    get title() {
+  get title() {
     return this.#title;
-    }
+  }
 
-    get description() {
-    return this.#description;
-    }
+  get tasks() {
+    // Defensive copy
+    return [...this.#tasks];
+  }
 
-    get priority() {
-        return this.#priority;
-    }
+  /**
+   * A task list is complete if:
+   * - it has at least one task
+   * - every task is complete
+   */
+  get isComplete() {
+    return (
+      this.#tasks.length > 0 &&
+      this.#tasks.every(task => task.isComplete)
+    );
+  }
 
-    get tasklist() {
-        return this.#tasklist;
-    }
+  /* ========= Setters ========= */
 
-    set title(value) {
+  set title(value) {
     if (typeof value !== 'string' || value.trim() === '') {
-        throw new Error('Task title must be a non-empty string');
+      throw new Error('TaskList title must be a non-empty string');
     }
     this.#title = value.trim();
+  }
+
+  /* ========= Behavior ========= */
+
+  addTask(task) {
+    if (!(task instanceof Task)) {
+      throw new Error('Only Task instances can be added to a TaskList');
     }
 
-    set priority(value) {
-    if (!Object.values(Priority).includes(value)) {
-        throw new Error(
-        `Priority must be one of: ${Object.values(Priority).join(', ')}`
-        );
-    }
-    this.#priority = value;
-    }
+    this.#tasks.push(task);
+  }
 
-    set description(value) {
-    if (typeof value !== 'string') {
-        throw new Error('Description must be a string');
-    }
-    this.#description = value;
+  removeTask(task) {
+    if (!(task instanceof Task)) {
+      throw new Error('Only Task instances can be removed from a TaskList');
     }
 
-    addTask(task) {
-        if (!(task instanceof Task)) {
-            throw new Error('Only Task instances can be added');
-        }
-        this.#tasklist.push(task);
+    const index = this.#tasks.indexOf(task);
+    if (index === -1) {
+      throw new Error('Task not found in this TaskList');
     }
 
-    removeTask(task) {
-        if (!(task instanceof Task)) {
-            throw new Error('Only Task instances can be removed');
-        }
+    this.#tasks.splice(index, 1);
+  }
 
-        const index = this.#tasklist.indexOf(task);
+  /* ========= Derived State ========= */
 
-        if (index === -1) {
-            throw new Error('Task not found in this list');
-        }
+  checkCompleted() {
+    return this.isComplete;
+  }
 
-        this.#tasklist.splice(index, 1);
-    }
+  get hasTasks() {
+    return this.#tasks.length > 0;
+  }
 
-    //filter by priority ascending descending
-    // Add task complete and task list complete if tasks are complete what if there's no tasks in task list???
-    //check if tasklst is empty then differne tvonditions if nt empty then check if all sbtasks are complete if not then it needs to be ticked manually
+  get incompleteTasks() {
+    return this.#tasks.filter(task => !task.isComplete);
+  }
+
+  get completedTasks() {
+    return this.#tasks.filter(task => task.isComplete);
+  }
+
+  get overdueTasks() {
+    return this.#tasks.filter(task => task.isOverdue);
+  }
 }
+
+export default TaskList;

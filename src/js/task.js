@@ -1,15 +1,14 @@
-// title, description, dueDate and priority
-import Priority from './priority';
-import { isAfter, parseISO } from 'date-fns';
+import Priority from './priority.js';
+import { isAfter } from 'date-fns';
 
 class Task {
   #title;
   #dueDate;
   #priority;
   #description;
+  #isComplete;
 
   constructor(title, dueDate, priority = Priority.NORMAL, description = '') {
-    
     // Title validation
     if (typeof title !== 'string' || title.trim() === '') {
       throw new Error('Task title must be a non-empty string');
@@ -32,70 +31,91 @@ class Task {
       throw new Error('Description must be a string');
     }
 
-    // Assign to private fields
-    this.#title = title;
+    this.#title = title.trim();
     this.#dueDate = dueDate;
     this.#priority = priority;
     this.#description = description;
-    
-    }
+    this.#isComplete = false;
+  }
 
-    // Getters
-    get title() {
+  /* ========= Getters ========= */
+
+  get title() {
     return this.#title;
-    }
+  }
 
-    get dueDate() {
+  get dueDate() {
     return this.#dueDate;
-    }
+  }
 
-    get priority() {
+  get priority() {
     return this.#priority;
-    }
+  }
 
-    get description() {
+  get description() {
     return this.#description;
-    }
+  }
 
-    get isUpcoming() {
-    return this._dueDate > new Date();
-    }
+  get isComplete() {
+    return this.#isComplete;
+  }
 
-    // Derived property
-    get isOverdue() {
-    return Date.now() > this.#dueDate.getTime();
-    }
+  /**
+   * Derived temporal state
+   */
+  get isOverdue() {
+    return isAfter(new Date(), this.#dueDate);
+  }
 
-    set title(value) {
+  get isUpcoming() {
+    return isAfter(this.#dueDate, new Date());
+  }
+
+  /* ========= Setters ========= */
+
+  set title(value) {
     if (typeof value !== 'string' || value.trim() === '') {
-        throw new Error('Task title must be a non-empty string');
+      throw new Error('Task title must be a non-empty string');
     }
     this.#title = value.trim();
-    }
+  }
 
-    set dueDate(value) {
+  set dueDate(value) {
     if (!(value instanceof Date) || isNaN(value.getTime())) {
-        throw new Error('dueDate must be a valid Date');
+      throw new Error('dueDate must be a valid Date');
     }
     this.#dueDate = value;
-    }
+  }
 
-    set priority(value) {
+  set priority(value) {
     if (!Object.values(Priority).includes(value)) {
-        throw new Error(
+      throw new Error(
         `Priority must be one of: ${Object.values(Priority).join(', ')}`
-        );
+      );
     }
     this.#priority = value;
-    }
+  }
 
-    set description(value) {
+  set description(value) {
     if (typeof value !== 'string') {
-        throw new Error('Description must be a string');
+      throw new Error('Description must be a string');
     }
     this.#description = value;
-    }
+  }
+
+  /* ========= Behavior ========= */
+
+  markComplete() {
+    this.#isComplete = true;
+  }
+
+  markIncomplete() {
+    this.#isComplete = false;
+  }
+
+  toggleComplete() {
+    this.#isComplete = !this.#isComplete;
+  }
 }
 
 export default Task;
-
