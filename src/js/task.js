@@ -7,6 +7,7 @@ class Task {
   #priority;
   #description;
   #isComplete;
+  #taskId;
 
   constructor(title, dueDate, priority = Priority.NORMAL, description = '') {
     // Title validation
@@ -36,6 +37,7 @@ class Task {
     this.#priority = priority;
     this.#description = description;
     this.#isComplete = false;
+    this.#taskId = crypto.randomUUID();
   }
 
   /* ========= Getters ========= */
@@ -58,6 +60,10 @@ class Task {
 
   get isComplete() {
     return this.#isComplete;
+  }
+
+  get taskId() {
+    return this.#taskId;
   }
 
   /**

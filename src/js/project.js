@@ -1,5 +1,4 @@
 import TaskList from "./tasklist";
-
 import TaskList from './tasklist.js';
 
 class Project {
@@ -7,6 +6,7 @@ class Project {
   #description;
   #todolists;
   #isComplete;
+  #projectId;
 
   constructor(title, description = '') {
     // Title validation
@@ -23,6 +23,7 @@ class Project {
     this.#description = description;
     this.#todolists = [];
     this.#isComplete = false;
+    this.#projectId = crypto.randomUUID();
     }
 
     /* ========= Getters ========= */
@@ -44,6 +45,10 @@ class Project {
         return this.#isComplete;
     }
 
+    get projectId() {
+        return this.#projectId;
+    }
+
     /* ========= Setters ========= */
 
     set title(value) {
@@ -62,25 +67,37 @@ class Project {
 
     /* ========= Behavior ========= */
 
-    addTaskList(taskList) {
-        if (!(taskList instanceof TaskList)) {
+    addToDo(list) {
+        if (!(list instanceof TaskList)) {
         throw new Error('Only TaskList instances can be added to a project');
         }
-        this.#todolists.push(taskList);
+        this.#todolists.push(list);
     }
 
-    removeTaskList(taskList) {
-        if (!(taskList instanceof TaskList)) {
+    removeToDo(list) {
+        if (!(list instanceof TaskList)) {
         throw new Error('Only TaskList instances can be removed from a project');
         }
 
-        const index = this.#todolists.indexOf(taskList);
+        const index = this.#todolists.indexOf(list);
         if (index === -1) {
         throw new Error('TaskList not found in this project');
         }
 
         this.#todolists.splice(index, 1);
     }
+
+    getToDoById(id) {
+        return this.#todolists.find(list => list.listId === id) ?? null;
+    }
+
+    removeToDoById(id) {
+    const list = this.getToDoById(id);
+    if (!list) {
+      throw new Error('To-do not found in this To-do List');
+    }
+    this.removeTask(list);
+  }
 
     /* ========= Derived State ========= */
 

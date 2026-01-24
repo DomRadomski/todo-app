@@ -3,6 +3,7 @@ import Task from './task.js';
 class TaskList {
   #title;
   #tasks;
+  #listId;
 
   constructor(title) {
     // Title validation
@@ -12,6 +13,7 @@ class TaskList {
 
     this.#title = title.trim();
     this.#tasks = [];
+    this.#listId = crypto.randomUUID();
   }
 
   /* ========= Getters ========= */
@@ -23,6 +25,10 @@ class TaskList {
   get tasks() {
     // Defensive copy
     return [...this.#tasks];
+  }
+
+  get listId() {
+    return this.#listId;
   }
 
   /**
@@ -68,6 +74,19 @@ class TaskList {
 
     this.#tasks.splice(index, 1);
   }
+
+  getTaskById(id) {
+    return this.#tasks.find(task => task.taskId === id) ?? null;
+  }
+
+  removeTaskById(id) {
+    const task = this.getTaskById(id);
+    if (!task) {
+      throw new Error('Task not found in this TaskList');
+    }
+    this.removeTask(task);
+  }
+
 
   /* ========= Derived State ========= */
 
