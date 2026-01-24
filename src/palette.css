@@ -1,0 +1,38 @@
+:root {
+    /* Backgrounds */
+    --color-bg-main: #f7f9fc;        /* white with subtle blue hue */
+    --color-bg-secondary: #ffffff;  /* pure white for cards / panels */
+
+    /* Text */
+    --color-text-primary: #0f1b2d;   /* deep navy */
+    --color-text-secondary: #4b5563; /* muted navy-grey */
+    --color-text-muted: #6b7280;
+
+    /* Primary accent */
+    --color-accent-primary: #0b2545; /* navy accent */
+    --color-accent-hover: #123a6f;
+
+    /* Neutrals / UI chrome */
+    --color-border: #e5e7eb;         /* light grey */
+    --color-divider: #d1d5db;
+    --color-surface: #f1f5f9;        /* subtle panel background */
+
+    /* Status colours */
+    --color-success: #3fae7a;        /* soft green */
+    --color-success-bg: #e6f6ef;
+
+    --color-danger: #e25555;         /* soft red */
+    --color-danger-bg: #fdecec;
+
+    /* Informational / accent */
+    --color-info: #4a90e2;        /* soft, calm blue */
+    --color-info-bg: #eaf3fd;     /* very light blue tint */
+
+    /* Focus & interaction */
+    --color-focus: #2563eb;          /* accessible blue focus ring */
+    --color-disabled: #9ca3af;
+
+    /* Shadows (optional but useful) */
+    --shadow-sm: 0 1px 2px rgba(15, 27, 45, 0.08);
+    --shadow-md: 0 4px 12px rgba(15, 27, 45, 0.12);
+}

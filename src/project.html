@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/abf8e1e086.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="palette.css">
+    <link rel="stylesheet" href="index.css">
+    <title>To-Do List</title>
+</head>
+
+<body>
+
+    <header class="app-header">
+        <nav class="nav">
+            <div class="nav-left">
+                <h1 class="app-title">ToDom</h1>
+                <i class="fa-solid fa-ellipsis"></i>
+            </div>
+
+            <div class="nav-right">
+                <button class="nav-button home-button">Home</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="content-project">
+
+        <!-- Left: Task Explorer -->
+        <aside class="task-explorer" aria-label="Task Explorer">
+
+            <!-- Explorer Header -->
+            <header class="explorer-header">
+                <h2 class="project-title">Learning</h2>
+
+                <button class="explorer-action" type="button" aria-label="Add new list">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>New List</span>
+                </button>
+            </header>
+
+            <!-- Explorer Tree -->
+            <div class="explorer-tree">
+
+                <!-- List Group -->
+                <section class="list-group">
+                    <div class="list-header">
+                        <button class="list-toggle" type="button" aria-expanded="true">
+                            <i class="fa-solid fa-chevron-down"></i>
+                            <span class="list-name">JavaScript Fundamentals</span>
+                            <span class="list-count">4</span>
+                        </button>
+
+                        <button class="list-action" type="button" aria-label="Add task">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <button class="task-link" type="button">
+                                <span class="task-status status-open" aria-hidden="true"></span>
+                                <span class="task-title">Finish ES6 modules section</span>
+                            </button>
+                        </li>
+                        <li class="task-item">
+                            <button class="task-link" type="button">
+                                <span class="task-status status-open" aria-hidden="true"></span>
+                                <span class="task-title">Refactor pub/sub module</span>
+                            </button>
+                        </li>
+                        <li class="task-item">
+                            <button class="task-link" type="button">
+                                <span class="task-status status-done" aria-hidden="true"></span>
+                                <span class="task-title">Review closures & scope notes</span>
+                            </button>
+                        </li>
+                        <li class="task-item">
+                            <button class="task-link" type="button">
+                                <span class="task-status status-open" aria-hidden="true"></span>
+                                <span class="task-title">Write tests for Task class</span>
+                            </button>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- List Group (collapsed) -->
+                <section class="list-group">
+                    <div class="list-header">
+                        <button class="list-toggle" type="button" aria-expanded="false">
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <span class="list-name">CSS & Layout</span>
+                            <span class="list-count">3</span>
+                        </button>
+
+                        <button class="list-action" type="button" aria-label="Add task">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <ul class="task-list is-collapsed">
+                        <li class="task-item">
+                            <button class="task-link" type="button">
+                                <span class="task-status status-open" aria-hidden="true"></span>
+                                <span class="task-title">Build responsive grid system</span>
+                            </button>
+                        </li>
+                        <li class="task-item">
+                            <button class="task-link" type="button">
+                                <span class="task-status status-done" aria-hidden="true"></span>
+                                <span class="task-title">Palette tokens finalised</span>
+                            </button>
+                        </li>
+                        <li class="task-item">
+                            <button class="task-link" type="button">
+                                <span class="task-status status-open" aria-hidden="true"></span>
+                                <span class="task-title">Add focus states everywhere</span>
+                            </button>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- List Group -->
+                <section class="list-group">
+                    <div class="list-header">
+                        <button class="list-toggle" type="button" aria-expanded="true">
+                            <i class="fa-solid fa-chevron-down"></i>
+                            <span class="list-name">Reading List</span>
+                            <span class="list-count">2</span>
+                        </button>
+
+                        <button class="list-action" type="button" aria-label="Add task">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <button class="task-link" type="button">
+                                <span class="task-status status-open" aria-hidden="true"></span>
+                                <span class="task-title">Networking: read Chapter 2</span>
+                            </button>
+                        </li>
+                        <li class="task-item">
+                            <button class="task-link" type="button">
+                                <span class="task-status status-open" aria-hidden="true"></span>
+                                <span class="task-title">Refactoring UI: take notes</span>
+                            </button>
+                        </li>
+                    </ul>
+                </section>
+
+            </div>
+        </aside>
+
+        <!-- Right: Task Detail Pane -->
+        <section class="task-pane" aria-label="Task Details Pane">
+
+            <!-- Empty state (keep this) -->
+            <div class="pane-empty" style="display: none;">
+                <h3>Select a task</h3>
+                <p>Choose a task from the explorer to view details here.</p>
+            </div>
+
+            <article class="task-card" aria-label="Task details">
+                <header class="task-card-header">
+                    <h3 class="task-card-title">Finish ES6 modules section</h3>
+
+                    <div class="task-badges">
+                        <!-- Priority -->
+                        <span class="task-badge badge-priority priority-medium">
+                            <span class="badge-dot" aria-hidden="true"></span>
+                            Medium priority
+                        </span>
+
+                        <!-- Completion status -->
+                        <span class="task-badge badge-incomplete">
+                            <span class="badge-dot" aria-hidden="true"></span>
+                            Not completed
+                        </span>
+                    </div>
+                </header>
+
+                <div class="task-card-grid">
+                    <div class="task-field">
+                        <span class="task-label">Due date</span>
+                        <span class="task-value">Friday, 6 Feb 2026</span>
+                    </div>
+
+                    <div class="task-field">
+                        <span class="task-label">Status</span>
+                        <span class="task-value">Open</span>
+                    </div>
+
+                    <div class="task-field task-notes">
+                        <span class="task-label">Notes</span>
+                        <p class="task-notes-text">
+                            Focus on import/export patterns, default vs named exports, and make sure the module boundaries
+                            stay clean. Refactor any circular dependencies if they appear.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+
+        </section>
+
+
+    </div>
+
+    
+    <footer class="app-footer">
+        <div class="footer-left">
+            <span class="app-name">ToDom</span>
+        </div>
+
+        <div class="footer-right">
+            <span class="footer-meta">© 2026 · Stay organised</span>
+        </div>
+    </footer>
+
+</body>
+</html>

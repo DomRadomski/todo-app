@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TooDo – Colour Palette</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Palette variables -->
+    <link rel="stylesheet" href="palette.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 2rem;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--color-bg-main);
+            color: var(--color-text-primary);
+        }
+
+        h1 {
+            margin-bottom: 2rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        .swatch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .swatch {
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            background: var(--color-bg-secondary);
+        }
+
+        .swatch-color {
+            height: 80px;
+        }
+
+        .swatch-info {
+            padding: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .token {
+            font-family: monospace;
+            display: block;
+        }
+
+        .example-text {
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<h1>TooDo – Colour Palette</h1>
+
+<section>
+    <h2>Backgrounds</h2>
+    <div class="swatch-grid">
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-bg-main)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-bg-main</span>
+            </div>
+        </div>
+
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-bg-secondary)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-bg-secondary</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Text</h2>
+    <div class="swatch-grid">
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-text-primary)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-text-primary</span>
+                <span class="example-text" style="color: var(--color-text-primary)">Primary text</span>
+            </div>
+        </div>
+
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-text-secondary)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-text-secondary</span>
+                <span class="example-text" style="color: var(--color-text-secondary)">Secondary text</span>
+            </div>
+        </div>
+
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-text-muted)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-text-muted</span>
+                <span class="example-text" style="color: var(--color-text-muted)">Muted text</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Primary Accent</h2>
+    <div class="swatch-grid">
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-accent-primary)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-accent-primary</span>
+            </div>
+        </div>
+
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-accent-hover)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-accent-hover</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Neutrals / UI</h2>
+    <div class="swatch-grid">
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-border)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-border</span>
+            </div>
+        </div>
+
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-divider)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-divider</span>
+            </div>
+        </div>
+
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-surface)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-surface</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Status Colours</h2>
+    <div class="swatch-grid">
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-success)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-success</span>
+            </div>
+        </div>
+
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-success-bg)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-success-bg</span>
+            </div>
+        </div>
+
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-danger)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-danger</span>
+            </div>
+        </div>
+
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-danger-bg)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-danger-bg</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Utility</h2>
+    <div class="swatch-grid">
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-focus)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-focus</span>
+            </div>
+        </div>
+
+        <div class="swatch">
+            <div class="swatch-color" style="background: var(--color-disabled)"></div>
+            <div class="swatch-info">
+                <span class="token">--color-disabled</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
