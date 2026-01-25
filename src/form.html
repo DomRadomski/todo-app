@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/abf8e1e086.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="palette.css">
+    <link rel="stylesheet" href="index.css">
+    <title>To-Do List</title>
+</head>
+
+<body>
+
+    <header class="app-header">
+        <nav class="nav">
+            <div class="nav-left">
+                <h1 class="app-title">ToDom</h1>
+                <i class="fa-solid fa-ellipsis"></i>
+            </div>
+
+            <div class="nav-right">
+                <button class="nav-button add-project-button">Add Project</button>
+                <button class="nav-button home-button">Home</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="content">
+        <section class="add-project">
+            <h2 class="section-title">Add Project</h2>
+
+            <form class="add-project-form">
+                <div class="form-group">
+                <label for="project-title">Project title</label>
+                <input
+                    type="text"
+                    id="project-title"
+                    name="title"
+                    required
+                    placeholder="e.g. Home Renovation"
+                />
+                </div>
+
+                <div class="form-group">
+                <label for="project-description">Description</label>
+                <textarea
+                    id="project-description"
+                    name="description"
+                    rows="3"
+                    placeholder="Optional description for this project"
+                ></textarea>
+                </div>
+
+                <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    Add Project
+                </button>
+                </div>
+            </form>
+        </section>
+    </div>
+    
+    <footer class="app-footer">
+        <div class="footer-left">
+            <span class="app-name">ToDom</span>
+        </div>
+
+        <div class="footer-right">
+            <span class="footer-meta">© 2026 · Stay organised</span>
+        </div>
+    </footer>
+
+</body>
+</html>

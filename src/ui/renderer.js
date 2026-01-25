@@ -73,34 +73,6 @@ const renderer = (() => {
 
 //===========Home-Projects============//
 
-    const projects = [
-        {
-            "projectId": "personal",
-            "title": "Personal",
-            "desc": "Everyday tasks, reminders, and personal goals."
-        },
-        {
-            "projectId": "work",
-            "title": "Work",
-            "desc": "Tasks and deadlines related to your current role and projects."
-        },
-        {
-            "projectId": "learning",
-            "title": "Learning",
-            "desc": "Courses, reading, and skill development goals."
-        },
-        {
-            "projectId": "fitness",
-            "title": "Fitness",
-            "desc": "Workouts, habits, and health-related tasks."
-        },
-        {
-            "projectId": "side-projects",
-            "title": "Side Projects",
-            "desc": "Ideas and experiments you work on outside of your main commitments."
-        }
-    ];
-
     const genProjectCard = ({ projectId, title, desc }) => {
         const titleEl = genElement("h4", "project-title", title);
         const descEl = genElement("p", "project-description", desc);
@@ -128,7 +100,50 @@ const renderer = (() => {
         page.appendChild(projectsContainer);
     };
 
-  return { genWelcome, genProjects }
+    //==============Form-Generators=================//
+
+    const genProjectForm = () => {
+        const titleInput = genElement("input");
+        titleInput.type = "text";
+        titleInput.id = "project-title";
+        titleInput.name = "title";
+        titleInput.required = true;
+        titleInput.placeholder = "e.g. Home Renovation";
+
+        const descTextarea = genElement("textarea");
+        descTextarea.id = "project-description";
+        descTextarea.name = "description";
+        descTextarea.rows = 3;
+        descTextarea.placeholder = "Optional description for this project";
+
+        const form = genElement("form", "add-project-form", "", [
+            genElement("div", "form-group", "", [
+            genElement("label", null, "Project title"),
+            titleInput
+            ]),
+            genElement("div", "form-group", "", [
+            genElement("label", null, "Description"),
+            descTextarea
+            ]),
+            genElement("div", "form-actions", "", [
+            genElement("button", ["btn", "btn-primary"], "Add Project")
+            ])
+        ]);
+
+        // Fix up label associations
+        form.querySelector('label[for]')?.setAttribute("for", "project-title");
+        form.querySelectorAll("label")[1].setAttribute("for", "project-description");
+        form.querySelector("button").type = "submit";
+
+        page.appendChild(genElement("section", "add-project", "", [
+            genElement("h2", "section-title", "Add Project"),
+            form
+        ]));
+        }
+
+
+
+  return { genWelcome, genProjects, genProjectForm }
 
 })();
 

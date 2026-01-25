@@ -5,11 +5,11 @@ class Task {
   #title;
   #dueDate;
   #priority;
-  #description;
+  #notes;
   #isComplete;
   #taskId;
 
-  constructor(title, dueDate, priority = Priority.NORMAL, description = '') {
+  constructor(title, dueDate, priority = Priority.NORMAL, notes = '') {
     // Title validation
     if (typeof title !== 'string' || title.trim() === '') {
       throw new Error('Task title must be a non-empty string');
@@ -27,15 +27,15 @@ class Task {
       );
     }
 
-    // Description validation
-    if (typeof description !== 'string') {
-      throw new Error('Description must be a string');
+    // notes validation
+    if (typeof notes !== 'string') {
+      throw new Error('notes must be a string');
     }
 
     this.#title = title.trim();
     this.#dueDate = dueDate;
     this.#priority = priority;
-    this.#description = description;
+    this.#notes = notes;
     this.#isComplete = false;
     this.#taskId = crypto.randomUUID();
   }
@@ -54,8 +54,8 @@ class Task {
     return this.#priority;
   }
 
-  get description() {
-    return this.#description;
+  get notes() {
+    return this.#notes;
   }
 
   get isComplete() {
@@ -102,11 +102,11 @@ class Task {
     this.#priority = value;
   }
 
-  set description(value) {
+  set notes(value) {
     if (typeof value !== 'string') {
-      throw new Error('Description must be a string');
+      throw new Error('notes must be a string');
     }
-    this.#description = value;
+    this.#notes = value;
   }
 
   /* ========= Behavior ========= */

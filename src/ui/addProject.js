@@ -3,9 +3,9 @@ import { getProjects, projectsToJson } from "../js/user";
 
 let projectJson = projectsToJson(getProjects());
 
-const genHome = () => {
-    renderer.genWelcome();
-    renderer.genProjects(projectJson);
+const genAddProject = () => {
+    renderer.genProjectForm();
+    //Add event listner and functionality, pubsub??
 }
 
-export default genHome;
+export default genAddProject;

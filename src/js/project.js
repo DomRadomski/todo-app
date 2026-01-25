@@ -1,4 +1,3 @@
-import TaskList from "./tasklist";
 import TaskList from './tasklist.js';
 
 class Project {
