@@ -25,6 +25,11 @@ const renderer = (() => {
         return el;
     };
 
+    const switchPage = (genFns = []) => {
+        page.innerHTML = "";
+        genFns.forEach(fn => fn());
+    };
+
         //=============Constants=================//
 
         //   const generateNav = () => {
@@ -90,6 +95,8 @@ const renderer = (() => {
     };
 
     const genProjects = (projects) => {
+        console.log("gen projects");
+        console.table(projects)
         const projectsContainer = genElement("div", "projects");
 
         projects.forEach(project => {
@@ -143,7 +150,7 @@ const renderer = (() => {
 
 
 
-  return { genWelcome, genProjects, genProjectForm }
+  return { switchPage, genWelcome, genProjects, genProjectForm }
 
 })();
 

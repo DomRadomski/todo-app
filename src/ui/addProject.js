@@ -1,11 +1,15 @@
 import renderer from "./renderer";
-import { getProjects, projectsToJson } from "../js/user";
+import { addProject, getProjects, projectsToJson } from "../js/user";
 
 let projectJson = projectsToJson(getProjects());
 
 const genAddProject = () => {
-    renderer.genProjectForm();
-    //Add event listner and functionality, pubsub??
+    renderer.genProjectForm();   
 }
 
-export default genAddProject;
+const genNewProject = (evnt, title, desc) => {
+    evnt.preventDefault();
+    addProject(title, desc);
+}
+
+export {genAddProject, genNewProject};
