@@ -107,6 +107,93 @@ const renderer = (() => {
         page.appendChild(projectsContainer);
     };
 
+    //============Load-individual-project=============//
+
+    //genTaskPane
+
+    const genTaskPane = () => {
+        const heading = genElement("h3", null, "Select a task");
+
+        const paragraph = genElement(
+            "p",
+            null,
+            "Choose a task from the explorer to view details here."
+        );
+
+        const emptyPane = genElement(
+            "div",
+            "pane-empty",
+            "",
+            [heading, paragraph]
+        );
+
+        emptyPane.style.display = "none";
+
+        const taskPane = genElement(
+            "section",
+            "task-pane",
+            "",
+            [emptyPane]
+        );
+
+        taskPane.setAttribute("aria-label", "Task Details Pane");
+        page.appendChild(taskPane)
+
+        return taskPane;
+    };
+
+
+    //genExplorer
+
+    const genExplorer = () => {
+        // Icon inside the button
+        const plusIcon = genElement("i", ["fa-solid", "fa-plus"]);
+
+        // Button text
+        const buttonText = genElement("span", null, "New List");
+
+        // Action button
+        const actionButton = genElement(
+            "button",
+            "explorer-action",
+            "",
+            [plusIcon, buttonText]
+        );
+        actionButton.type = "button";
+        actionButton.setAttribute("aria-label", "Add new list");
+
+        // Header title
+        const projectTitle = genElement("h2", "project-title", "Learning");
+
+        // Explorer header
+        const explorerHeader = genElement(
+            "header",
+            "explorer-header",
+            "",
+            [projectTitle, actionButton]
+        );
+
+        // Aside (Task Explorer)
+        const taskExplorer = genElement(
+            "aside",
+            "task-explorer",
+            "",
+            [explorerHeader]
+        );
+
+        taskExplorer.setAttribute("aria-label", "Task Explorer");
+        page.appendChild(taskExplorer);
+
+        return taskExplorer;
+    };
+
+
+    //genLists
+
+    const genLists = () => {
+        
+    }
+
     //==============Form-Generators=================//
 
     const genProjectForm = () => {
@@ -150,7 +237,7 @@ const renderer = (() => {
 
 
 
-  return { switchPage, genWelcome, genProjects, genProjectForm }
+  return { switchPage, genWelcome, genProjects, genProjectForm, genTaskPane, genExplorer }
 
 })();
 

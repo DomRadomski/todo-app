@@ -2,13 +2,16 @@ import './index.css';
 import './palette.css';
 import genHome from './ui/home';
 import {genAddProject, genNewProject} from './ui/addProject';
+import genProjectPage from './ui/projectPage';
 import { getProjectById } from './js/user';
+
 
 const page = document.querySelector(".content");
 
 const routes = {
   home: genHome,
-  addProject: genAddProject
+  addProject: genAddProject,
+  projectPage: genProjectPage
 };
 
 const clearContent = () => {
@@ -20,6 +23,8 @@ const loadPage = (route) => {
   const render = routes[route];
   if (!render) throw new Error(`Unknown route: ${route}`);
 
+  if (route !== "projectPage") {page.classList = "content"}
+  
   clearContent();
   render();
 };
@@ -49,8 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   page.addEventListener("click", (e) => {
     if(e.target.closest(".project-card")) {
-      //loadPage(project)
-      console.table(getProjectById(e.target.closest(".project-card").id))
+      let currentProject = getProjectById(e.target.closest(".project-card").id);
+      console.table(currentProject);
+      page.classList.add("content-project");
+      loadPage("projectPage");
     }
   })
 
