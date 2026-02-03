@@ -48,6 +48,10 @@ class Project {
         return this.#projectId;
     }
 
+    get numLists() {
+        return this.todolists.length;
+    }
+
     /* ========= Setters ========= */
 
     set title(value) {

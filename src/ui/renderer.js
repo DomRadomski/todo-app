@@ -8,20 +8,21 @@ const renderer = (() => {
     const page = document.querySelector(".content");
 
     const genElement = (tag, className, text = "", children = []) => {
+        
         const el = document.createElement(tag);
 
         if (className) {
-        // allow string or array of classes
-        if (Array.isArray(className)) el.classList.add(...className);
-        else el.classList.add(className);
+            if (Array.isArray(className)) el.classList.add(...className);
+            else el.classList.add(className);
         }
 
-        if (text) el.textContent = text;
+        if (text !== "" && text !== null && text !== undefined) {
+            el.textContent = text;
+        }
 
         if (children && children.length) {
-        children.forEach(child => el.appendChild(child));
+            children.forEach(child => el.appendChild(child));
         }
-
         return el;
     };
 
@@ -145,7 +146,7 @@ const renderer = (() => {
 
     //genExplorer
 
-    const genExplorer = () => {
+    const genExplorer = (title) => {
         // Icon inside the button
         const plusIcon = genElement("i", ["fa-solid", "fa-plus"]);
 
@@ -163,7 +164,7 @@ const renderer = (() => {
         actionButton.setAttribute("aria-label", "Add new list");
 
         // Header title
-        const projectTitle = genElement("h2", "project-title", "Learning");
+        const projectTitle = genElement("h2", "project-title", title);
 
         // Explorer header
         const explorerHeader = genElement(
@@ -190,9 +191,34 @@ const renderer = (() => {
 
     //genLists
 
-    const genLists = () => {
+    const genList = (listTitle, numTasks) => {
+        // Create toggle button with icon, title, and count
+        const toggleButton = genElement('button', 'list-toggle', '', [
+            genElement('i', ['fa-solid', 'fa-chevron-down']),
+            genElement('span', 'list-name', listTitle),
+            genElement('span', 'list-count', numTasks)
+        ]);
+        toggleButton.type = 'button';
+        toggleButton.setAttribute('aria-expanded', 'true');
+
+        // Create add task button with icon
+        const addButton = genElement('button', 'list-action', '', [
+            genElement('i', ['fa-solid', 'fa-plus'])
+        ]);
+        addButton.type = 'button';
+        addButton.setAttribute('aria-label', 'Add task');
+
+        // Create header with both buttons
+        const header = genElement('div', 'list-header', '', [
+            toggleButton,
+            addButton
+        ]);
+
+        // Create and return the section
+        const section = genElement('section', 'list-group', '', [header]);
         
-    }
+        return section;
+    };
 
     //==============Form-Generators=================//
 
@@ -237,7 +263,7 @@ const renderer = (() => {
 
 
 
-  return { switchPage, genWelcome, genProjects, genProjectForm, genTaskPane, genExplorer }
+  return { switchPage, genWelcome, genProjects, genProjectForm, genTaskPane, genExplorer, genList }
 
 })();
 

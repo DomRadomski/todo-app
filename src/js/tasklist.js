@@ -27,6 +27,11 @@ class TaskList {
     return [...this.#tasks];
   }
 
+  get numTasks() {
+    return this.#tasks.length;
+    
+  }
+
   get listId() {
     return this.#listId;
   }
@@ -109,6 +114,7 @@ class TaskList {
   get overdueTasks() {
     return this.#tasks.filter(task => task.isOverdue);
   }
+
 }
 
 export default TaskList;

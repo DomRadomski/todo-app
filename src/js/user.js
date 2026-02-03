@@ -1,10 +1,11 @@
 // userStore.js
 import Project from "./project.js";
+import TaskList from "./tasklist.js";
+
 
 const USER_NAME = "User";
 
 let projects = []; // Array<Project>
-
 
 addProject(
     "Personal",
@@ -31,6 +32,17 @@ addProject(
     "Ideas and experiments you work on outside of your main commitments."
   );
 
+  const listOne = new TaskList("One");
+  projects[0].addToDo(listOne);
+
+  const listTwo = new TaskList("Two");
+  projects[0].addToDo(listTwo);
+
+  const listThree = new TaskList("Three");
+  projects[0].addToDo(listThree);
+
+  const listFour = new TaskList("Four");
+  projects[0].addToDo(listFour);
 
 
 export function getUserName() {

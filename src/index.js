@@ -19,14 +19,14 @@ const clearContent = () => {
   page.innerHTML = "";
 };
 
-const loadPage = (route) => {
+const loadPage = (route, ...args) => {
   const render = routes[route];
   if (!render) throw new Error(`Unknown route: ${route}`);
 
   if (route !== "projectPage") {page.classList = "content"}
-  
+
   clearContent();
-  render();
+  render(...args);
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let currentProject = getProjectById(e.target.closest(".project-card").id);
       console.table(currentProject);
       page.classList.add("content-project");
-      loadPage("projectPage");
+      loadPage("projectPage", currentProject);
     }
   })
 
