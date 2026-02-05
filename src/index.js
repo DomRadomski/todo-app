@@ -53,12 +53,30 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   page.addEventListener("click", (e) => {
+    
+    // Move into project
+    
     if(e.target.closest(".project-card")) {
       let currentProject = getProjectById(e.target.closest(".project-card").id);
       console.table(currentProject);
       page.classList.add("content-project");
       loadPage("projectPage", currentProject);
     }
+
+    // Generate Tasks
+
+    if(e.target.closest(".list-toggle")) {
+      const listGroup = e.target.closest(".list-group");
+      const taskList = listGroup.querySelector(".task-list");
+      
+      // Toggle display
+      if (taskList.style.display === "none") {
+        taskList.style.display = "";
+      } else {
+        taskList.style.display = "none";
+      }
+    }
+  
   })
 
 });

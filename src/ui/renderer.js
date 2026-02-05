@@ -174,13 +174,20 @@ const renderer = (() => {
             [projectTitle, actionButton]
         );
 
+        const explorerTree = genElement(
+            "div",
+            "explorer-tree"    
+        );
+
         // Aside (Task Explorer)
         const taskExplorer = genElement(
             "aside",
             "task-explorer",
             "",
-            [explorerHeader]
+            [explorerHeader, explorerTree]
         );
+
+        
 
         taskExplorer.setAttribute("aria-label", "Task Explorer");
         page.appendChild(taskExplorer);
@@ -188,10 +195,7 @@ const renderer = (() => {
         return taskExplorer;
     };
 
-
-    //genLists
-
-    const genList = (listTitle, numTasks) => {
+    const genList = (listId, listTitle, numTasks) => {
         // Create toggle button with icon, title, and count
         const toggleButton = genElement('button', 'list-toggle', '', [
             genElement('i', ['fa-solid', 'fa-chevron-down']),
@@ -214,10 +218,35 @@ const renderer = (() => {
             addButton
         ]);
 
+        // Create list to hold tasks
+        const list = genElement('ul', 'task-list');
+
         // Create and return the section
-        const section = genElement('section', 'list-group', '', [header]);
+        const section = genElement('section', 'list-group', '', [header, list]);
+        section.id = listId;
         
-        return section;
+        return section; // add id to header !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    };
+
+    //==============//genTask
+
+    const genTask = (taskId, taskTitle, isComplete) => {
+        // Determine status class based on completion
+        const statusClass = isComplete ? 'status-complete' : 'status-open';
+        
+        // Create button with status and title spans
+        const button = genElement('button', 'task-link', '', [
+            genElement('span', ['task-status', statusClass]),
+            genElement('span', 'task-title', taskTitle)
+        ]);
+        button.type = 'button';
+        button.setAttribute('aria-hidden', 'true'); // Move aria-hidden to status span if needed
+        
+        // Create list item with id
+        const task = genElement('li', 'task-item', '', [button]);
+        task.id = taskId;
+        
+        return task;
     };
 
     //==============Form-Generators=================//
@@ -263,7 +292,7 @@ const renderer = (() => {
 
 
 
-  return { switchPage, genWelcome, genProjects, genProjectForm, genTaskPane, genExplorer, genList }
+  return { switchPage, genWelcome, genProjects, genProjectForm, genTaskPane, genExplorer, genList, genTask }
 
 })();
 
