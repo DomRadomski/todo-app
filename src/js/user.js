@@ -6,6 +6,9 @@ import Project from './project.js';
 import TaskList from './tasklist.js';
 
 let projects = []; // Array<Project>
+let openedTasks = [] // Array<Task>
+
+export {projects, openedTasks}
 
 addProject(
     "Personal",
@@ -115,6 +118,38 @@ export function addProject(title, description = "") {
   return project;
 }
 
+export function addList(project, title) {
+  const list = new TaskList(title);
+  project.addToDo(list);
+  return list
+}
+
+export function addTask(list, title, dueDate, priority, notes) {
+  if (!list) {
+    throw new Error('addTask requires a list to add the task to');
+  }
+
+  const task = new Task(title, dueDate, priority, notes);
+
+  // Adjust this depending on how your list is implemented
+  // Common patterns shown below
+
+  // If list is a class with an addTask method
+  if (typeof list.addTask === 'function') {
+    list.addTask(task);
+  }
+  // If list is just an array (early-stage / temporary)
+  else if (Array.isArray(list)) {
+    list.push(task);
+  }
+  else {
+    throw new Error('Provided list cannot accept tasks');
+  }
+
+  return task;
+}
+
+
 export function removeProjectById(id) {
   const index = projects.findIndex(
     project => project.projectId === id
@@ -137,4 +172,6 @@ export function projectsToJson(projects) {
     desc: project.description,
   }));
 }
+
+
 

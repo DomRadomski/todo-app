@@ -580,6 +580,12 @@ button {
     color: var(--color-text-primary);
 }
 
+.task-badges {
+    display: flex;
+    align-items: stretch; /* Makes children fill height */
+    gap: 1rem;
+}
+
 .task-badge {
     display: inline-flex;
     align-items: center;
@@ -592,6 +598,33 @@ button {
     background: var(--color-surface);
     color: var(--color-text-secondary);
     white-space: nowrap;
+}
+
+.close-task {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    align-self: stretch; /* Stretches to match parent's height */
+
+    font-size: 0.85rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    /* Reset button defaults */
+    box-sizing: border-box;
+}
+
+.close-task:hover {
+    background: var(--color-danger-subtle);
+    border-color: var(--color-danger);
+    color: var(--color-danger);
 }
 
 .badge-dot {
@@ -739,8 +772,83 @@ button {
     text-align: center;
 }
 
+/* ===== Modal overlay ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+/* Modal content - shared styles */
+.add-project,
+.add-list {
+    width: 100%;
+    background: var(--color-bg-main);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-lg);
+    margin: 0;
+    
+    /* Force solid background */
+    position: relative;
+    z-index: 1001;
+}
+
+.add-project {
+    max-width: 520px;
+}
+
+.add-list {
+    max-width: 420px;
+}
+
+/* Modal header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header .section-title {
+    margin: 0;
+}
+
+/* Close button */
+.modal-close {
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 160ms ease;
+}
+
+.modal-close:hover {
+    color: var(--color-text-primary);
+}
+
 /* ===== Form layout ===== */
-.add-project-form {
+.add-project-form,
+.add-list-form {
     display: grid;
     gap: 1rem;
 }
@@ -764,14 +872,11 @@ button {
     font-family: inherit;
     font-size: 0.95rem;
     line-height: 1.4;
-
     padding: 0.6rem 0.7rem;
     border-radius: 10px;
-
     border: 1px solid var(--color-border);
     background: var(--color-bg-secondary);
     color: var(--color-text-primary);
-
     transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
@@ -791,21 +896,11 @@ button {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--color-info);
-    box-shadow: 0 0 0 3px
-        color-mix(in srgb, var(--color-info) 30%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-info) 30%, transparent);
     background: var(--color-bg-secondary);
 }
 
 /* ===== Form actions ===== */
-
-.add-project {
-    width: 100%;
-    max-width: 520px;
-    margin: 0 auto;
-
-    justify-self: center; /* <-- safe grid centering */
-}
-
 .form-actions {
     display: flex;
     justify-content: flex-end;
@@ -817,14 +912,11 @@ button {
     border: 1px solid transparent;
     background: var(--color-accent-primary);
     color: var(--color-bg-secondary);
-
     padding: 0.55rem 1.1rem;
     border-radius: 999px;
-
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-
     box-shadow: var(--shadow-sm);
     transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
@@ -840,7 +932,68 @@ button {
 }
 
 .btn-primary:focus-visible {
-    outline: 3px solid
-        color-mix(in srgb, var(--color-focus) 35%, transparent);
+    outline: 3px solid color-mix(in srgb, var(--color-focus) 35%, transparent);
     outline-offset: 2px;
 }
+
+/* Add Task modal content */
+.add-task {
+  width: 100%;
+  max-width: 520px; /* or bump to 560 if you want */
+  background: var(--color-bg-main);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  margin: 0;
+  position: relative;
+  z-index: 1001;
+}
+
+.add-task-form {
+  display: grid;
+  gap: 1rem;
+}
+
+/* 2-up layout like "date + priority" */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 520px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Select to match input styling */
+.form-group select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  padding: 0.6rem 2.2rem 0.6rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--color-text-muted) 50%),
+    linear-gradient(135deg, var(--color-text-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-info);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-info) 30%, transparent);
+}
+

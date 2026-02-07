@@ -159,14 +159,14 @@ const renderer = (() => {
 
     //genTaskCard
 
-    const genTaskCard = (title, priority, dueDate, isComplete, notes) => {
+    const genTaskCard = (id, title, priority, dueDate, isComplete, notes) => {
         
         const priorityClass = priorityClassMap[priority.label];
         const priorityText = priorityTextMap[priority.label];
         
         // Format completion status
         const statusText = isComplete ? 'Complete' : 'Incomplete';
-        const statusBadgeText = isComplete ? 'Closed' : 'Open';
+        //const statusBadgeText = isComplete ? 'Closed' : 'Open';
         
         // Format date (you might want to use date-fns for this)
         const formattedDate = dueDate.toLocaleDateString('en-GB', {
@@ -182,16 +182,17 @@ const renderer = (() => {
             document.createTextNode(priorityText)
         ]);
         
-        // Create status badge
-        const statusBadge = genElement('span', 'task-badge', '', [
-            genElement('span', 'badge-dot'),
-            document.createTextNode(statusBadgeText)
+        // Close task button
+        const closeTask = genElement('button', 'close-task', '', [
+            genElement('i', ['fa-solid', 'fa-xmark'])
         ]);
+        closeTask.type = 'button';
+        closeTask.setAttribute('aria-label', 'Close task');
         
         // Create badges container
         const badges = genElement('div', 'task-badges', '', [
             priorityBadge,
-            statusBadge
+            closeTask
         ]);
         
         // Create header
@@ -230,8 +231,10 @@ const renderer = (() => {
             header,
             grid
         ]);
+
         article.setAttribute('aria-label', 'Task details');
-        
+        article.id = id;
+
         return article;
     };
 
@@ -312,6 +315,7 @@ const renderer = (() => {
 
         // Create list to hold tasks
         const list = genElement('ul', 'task-list');
+        //list.style.display = "none";
 
         // Create and return the section
         const section = genElement('section', 'list-group', '', [header, list]);

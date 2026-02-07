@@ -1,17 +1,19 @@
 import './index.css';
 import './palette.css';
 import genHome from './ui/home';
-import {genAddProject, genNewProject} from './ui/addProject';
 import genProjectPage from './ui/projectPage';
-import { getProjectById, getToDoById, getTaskById } from './js/user';
+import { getProjectById, getToDoById, getTaskById, openedTasks, addProject, addList, addTask } from './js/user';
 import renderer from './ui/renderer';
+import Priority from './js/priority';
 
 
 const page = document.querySelector(".content");
+const addProjectForm = document.querySelector("div#add-project");
+const newListForm = document.querySelector("div#new-list");
+const addTaskForm = document.querySelector("div#add-task");
 
 const routes = {
   home: genHome,
-  addProject: genAddProject,
   projectPage: genProjectPage
 };
 
@@ -33,31 +35,74 @@ const loadPage = (route, ...args) => {
 document.addEventListener("DOMContentLoaded", () => {
   const header = document.querySelector("header");
   loadPage("home"); // initial route
+  let currentProject;
+  let currentList;
   
   header.addEventListener("click", (e) => {
     if (e.target.closest(".add-project-button")) {
-      loadPage("addProject");
+      //loadPage("addProject");
+      addProjectForm.classList.toggle('hidden');
     } else if (e.target.closest(".home-button")) {
       loadPage("home");
     }
   });
 
   document.addEventListener("submit", (e) => {
-    // Can add validation in future
-    let proTitle = document.querySelector("#project-title").value;
-    let proDesc = document.querySelector("#project-description").value;   
-
-    genNewProject(e, proTitle, proDesc);
-
-    loadPage("home")
     
-  })
+    if(e.target.classList.contains("add-project-form")) {
+      e.preventDefault(); // Don't forget this!
+      
+      // Can add validation in future
+      let proTitle = document.querySelector("#project-title").value;
+      let proDesc = document.querySelector("#project-description").value;   
 
-  let currentProject;
+      addProject(proTitle,proDesc);
+
+      loadPage("home");
+
+      addProjectForm.classList.toggle("hidden");
+    }
+
+    if(e.target.classList.contains("add-list-form")) {
+      e.preventDefault(); // Don't forget this!
+      
+      // Can add validation in future
+      let listTitle = document.querySelector("#list-title").value;
+        
+
+      addList(currentProject, listTitle);
+
+      loadPage("projectPage", currentProject);
+
+      newListForm.classList.toggle("hidden");
+    }
+
+    if (e.target.classList.contains("add-task-form")) {
+      e.preventDefault(); // Prevent page reload
+
+      // Grab values from the form
+      const title = document.querySelector("#task-title").value;
+      const dueDateValue = document.querySelector("#task-due-date").value;
+      const priorityKey = document.querySelector("#task-priority").value;
+      const notes = document.querySelector("#task-notes").value;
+
+      // Convert date string -> Date object for Task constructor
+      const dueDate = new Date(dueDateValue);
+      const priority = Priority[priorityKey];
+
+      // TODO: wire this up later
+      addTask(currentList, title, dueDate, priority, notes);
+
+      loadPage("projectPage", currentProject);
+
+      addTaskForm.classList.toggle("hidden");
+    }
+
+  });
 
   page.addEventListener("click", (e) => {
     
-    // Move into project
+    // Project Stuff
     
     if(e.target.closest(".project-card")) {
       currentProject = getProjectById(e.target.closest(".project-card").id);
@@ -66,21 +111,22 @@ document.addEventListener("DOMContentLoaded", () => {
       loadPage("projectPage", currentProject);
     }
 
-    // Generate Tasks
+    // List stuff
 
     if(e.target.closest(".list-toggle")) {
       const listGroup = e.target.closest(".list-group");
       const taskList = listGroup.querySelector(".task-list");
-      
+      const numTasks = listGroup.querySelector(".list-count").textContent;
       // Toggle display
-      if (taskList.style.display === "none") {
+      console.log(numTasks)
+      if (taskList.style.display === "none" && numTasks != "0") {
         taskList.style.display = "";
       } else {
         taskList.style.display = "none";
       }
     }
 
-    //============================================
+    // Add List
 
     if(e.target.closest(".task-link")) {
       let taskPane = document.querySelector(".task-pane");
@@ -90,10 +136,50 @@ document.addEventListener("DOMContentLoaded", () => {
       let listId = e.target.closest(".list-group").id;
       let list = getToDoById(listId, currentProject);
       let task = getTaskById(taskId, list);
-      
-      taskPane.appendChild(renderer.genTaskCard(task.title, task.priority, task.dueDate, task.isComplete, task.notes));
+      openedTasks.push(task);
+      taskPane.appendChild(renderer.genTaskCard(taskId, task.title, task.priority, task.dueDate, task.isComplete, task.notes));
     }
-    
+
+    // Task Stuff
+
+    // Add Task
+
+    if(e.target.closest(".list-action")) {
+      addTaskForm.classList.toggle("hidden");
+      let listId = e.target.closest(".list-group").id;
+      currentList = getToDoById(listId, currentProject);
+    }
+
+    // Close Task
+    if(e.target.closest(".close-task")) {
+      let taskCardId = e.target.closest("article").id;
+      let taskIndex = openedTasks.findIndex(task => task.taskId === taskCardId);
+      
+      if (taskIndex !== -1) {
+          openedTasks.splice(taskIndex, 1);
+          loadPage("projectPage", currentProject);
+      }
+    }
+
+    //==========Open new list form============
+    if(e.target.closest(".explorer-action")) {
+      newListForm.classList.toggle("hidden");
+    }
+  })
+
+    //====================Close-forms===========================
+  document.addEventListener("click", (e) => {
+    if(e.target.closest("#close-add-project")) {
+      addProjectForm.classList.toggle("hidden");
+    }
+
+    else if(e.target.closest("#close-new-list")) {
+      newListForm.classList.toggle("hidden");
+    }
+
+    else if(e.target.closest("#close-add-task")) {
+      addTaskForm.classList.toggle("hidden");
+    }
   })
 
 });

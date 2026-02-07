@@ -74,7 +74,7 @@ class Project {
         if (!(list instanceof TaskList)) {
         throw new Error('Only TaskList instances can be added to a project');
         }
-        this.#todolists.push(list);
+        this.#todolists.unshift(list);
     }
 
     removeToDo(list) {

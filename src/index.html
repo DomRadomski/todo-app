@@ -27,6 +27,8 @@
     <div class="content">
         
     </div>
+
+    <!--Forms-->
     
     <footer class="app-footer">
         <div class="footer-left">
@@ -37,6 +39,139 @@
             <span class="footer-meta">© 2026 · Stay organised</span>
         </div>
     </footer>
+
+    <div id="add-project" class="modal-overlay hidden">
+        <section class="add-project">
+            <div class="modal-header">
+                <h2 class="section-title">Add Project</h2>
+                <button id="close-add-project" class="modal-close" type="button" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form class="add-project-form">
+                <div class="form-group">
+                    <label for="project-title">Project title</label>
+                    <input
+                        type="text"
+                        id="project-title"
+                        name="title"
+                        required
+                        placeholder="e.g. Home Renovation"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="project-description">Description</label>
+                    <textarea
+                        id="project-description"
+                        name="description"
+                        rows="3"
+                        placeholder="Optional description for this project"
+                    ></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button id="add-project-btn" type="submit" class="btn btn-primary">
+                        Add Project
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div id="new-list" class="modal-overlay hidden">
+        <section class="add-list">
+            <div class="modal-header">
+                <h2 class="section-title">Add List</h2>
+                <button id="close-new-list"class="modal-close" type="button" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form class="add-list-form">
+                <div class="form-group">
+                    <label for="list-title">List title</label>
+                    <input
+                        type="text"
+                        id="list-title"
+                        name="title"
+                        required
+                        placeholder="e.g. Urgent Tasks"
+                    />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="new-list-btn" class="btn btn-primary">
+                        Add List
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div id="add-task" class="modal-overlay hidden">
+        <section class="add-task" role="dialog" aria-modal="true" aria-labelledby="add-task-title">
+            <div class="modal-header">
+            <h2 id="add-task-title" class="section-title">Add Task</h2>
+            <button id="close-add-task" class="modal-close" type="button" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            </div>
+
+            <form class="add-task-form">
+            <div class="form-group">
+                <label for="task-title">Task title</label>
+                <input
+                type="text"
+                id="task-title"
+                name="title"
+                required
+                placeholder="e.g. Book MOT"
+                autocomplete="off"
+                />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                <label for="task-due-date">Due date</label>
+                <input
+                    type="date"
+                    id="task-due-date"
+                    name="dueDate"
+                    required
+                />
+                </div>
+
+                <div class="form-group">
+                    <label for="task-priority">Priority</label>
+                    <select id="task-priority" name="priority" required>
+                        <option value="LOW">Low</option>
+                        <option value="NORMAL" selected>Normal</option>
+                        <option value="HIGH">High</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="task-notes">Notes</label>
+                <textarea
+                id="task-notes"
+                name="notes"
+                rows="3"
+                placeholder="Optional notes for this task"
+                ></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button id="add-task-btn" type="submit" class="btn btn-primary">
+                Add Task
+                </button>
+            </div>
+            </form>
+        </section>
+        </div>
+
 
 </body>
 </html>
