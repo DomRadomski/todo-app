@@ -3,7 +3,8 @@ import './palette.css';
 import genHome from './ui/home';
 import {genAddProject, genNewProject} from './ui/addProject';
 import genProjectPage from './ui/projectPage';
-import { getProjectById } from './js/user';
+import { getProjectById, getToDoById, getTaskById } from './js/user';
+import renderer from './ui/renderer';
 
 
 const page = document.querySelector(".content");
@@ -52,12 +53,14 @@ document.addEventListener("DOMContentLoaded", () => {
     
   })
 
+  let currentProject;
+
   page.addEventListener("click", (e) => {
     
     // Move into project
     
     if(e.target.closest(".project-card")) {
-      let currentProject = getProjectById(e.target.closest(".project-card").id);
+      currentProject = getProjectById(e.target.closest(".project-card").id);
       console.table(currentProject);
       page.classList.add("content-project");
       loadPage("projectPage", currentProject);
@@ -76,7 +79,21 @@ document.addEventListener("DOMContentLoaded", () => {
         taskList.style.display = "none";
       }
     }
-  
+
+    //============================================
+
+    if(e.target.closest(".task-link")) {
+      let taskPane = document.querySelector(".task-pane");
+      // don't like this can maybe fix later by regening task pane everytime and just add this to a task pane list of sorts
+
+      let taskId = e.target.closest(".task-item").id;
+      let listId = e.target.closest(".list-group").id;
+      let list = getToDoById(listId, currentProject);
+      let task = getTaskById(taskId, list);
+      
+      taskPane.appendChild(renderer.genTaskCard(task.title, task.priority, task.dueDate, task.isComplete, task.notes));
+    }
+    
   })
 
 });

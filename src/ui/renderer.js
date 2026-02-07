@@ -1,9 +1,23 @@
+import Priority from "../js/priority";
+
 const renderer = (() => {
 
     //===========Content Variables===============//
     
 
     //===========================================//
+
+    const priorityClassMap = {
+        [Priority.LOW.label]: 'priority-low',
+        [Priority.NORMAL.label]: 'priority-medium',
+        [Priority.HIGH.label]: 'priority-high'
+    };
+
+    const priorityTextMap = {
+        [Priority.LOW.label]: 'Low priority',
+        [Priority.NORMAL.label]: 'Medium priority',
+        [Priority.HIGH.label]: 'High priority'
+    };
 
     const page = document.querySelector(".content");
 
@@ -143,6 +157,84 @@ const renderer = (() => {
         return taskPane;
     };
 
+    //genTaskCard
+
+    const genTaskCard = (title, priority, dueDate, isComplete, notes) => {
+        
+        const priorityClass = priorityClassMap[priority.label];
+        const priorityText = priorityTextMap[priority.label];
+        
+        // Format completion status
+        const statusText = isComplete ? 'Complete' : 'Incomplete';
+        const statusBadgeText = isComplete ? 'Closed' : 'Open';
+        
+        // Format date (you might want to use date-fns for this)
+        const formattedDate = dueDate.toLocaleDateString('en-GB', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+        
+        // Create priority badge
+        const priorityBadge = genElement('span', ['task-badge', 'badge-priority', priorityClass], '', [
+            genElement('span', 'badge-dot'),
+            document.createTextNode(priorityText)
+        ]);
+        
+        // Create status badge
+        const statusBadge = genElement('span', 'task-badge', '', [
+            genElement('span', 'badge-dot'),
+            document.createTextNode(statusBadgeText)
+        ]);
+        
+        // Create badges container
+        const badges = genElement('div', 'task-badges', '', [
+            priorityBadge,
+            statusBadge
+        ]);
+        
+        // Create header
+        const header = genElement('header', 'task-card-header', '', [
+            genElement('h3', 'task-card-title', title),
+            badges
+        ]);
+        
+        // Create due date field
+        const dueDateField = genElement('div', 'task-field', '', [
+            genElement('span', 'task-label', 'Due date'),
+            genElement('span', 'task-value', formattedDate)
+        ]);
+        
+        // Create status field
+        const statusField = genElement('div', 'task-field', '', [
+            genElement('span', 'task-label', 'Status'),
+            genElement('span', 'task-value', statusText)
+        ]);
+        
+        // Create notes field
+        const notesField = genElement('div', ['task-field', 'task-notes'], '', [
+            genElement('span', 'task-label', 'Notes'),
+            genElement('p', 'task-notes-text', notes)
+        ]);
+        
+        // Create grid
+        const grid = genElement('div', 'task-card-grid', '', [
+            dueDateField,
+            statusField,
+            notesField
+        ]);
+        
+        // Create article
+        const article = genElement('article', 'task-card', '', [
+            header,
+            grid
+        ]);
+        article.setAttribute('aria-label', 'Task details');
+        
+        return article;
+    };
+
 
     //genExplorer
 
@@ -249,6 +341,8 @@ const renderer = (() => {
         return task;
     };
 
+
+
     //==============Form-Generators=================//
 
     const genProjectForm = () => {
@@ -292,7 +386,7 @@ const renderer = (() => {
 
 
 
-  return { switchPage, genWelcome, genProjects, genProjectForm, genTaskPane, genExplorer, genList, genTask }
+  return { switchPage, genWelcome, genProjects, genProjectForm, genTaskPane, genExplorer, genList, genTask, genTaskCard }
 
 })();
 

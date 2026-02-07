@@ -101,6 +101,14 @@ export function getProjectById(id) {
   return projects.find(project => project.projectId === id) ?? null;
 }
 
+export function getToDoById(id, project) {
+  return project.todolists.find(todo => todo.listId === id) ?? null;
+}
+
+export function getTaskById(id, list) {
+  return list.tasks.find(task => task.taskId === id) ?? null;
+}
+
 export function addProject(title, description = "") {
   const project = new Project(title, description);
   projects.push(project);
