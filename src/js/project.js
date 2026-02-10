@@ -99,7 +99,7 @@ class Project {
     if (!list) {
       throw new Error('To-do not found in this To-do List');
     }
-    this.removeTask(list);
+    this.removeToDo(list);
   }
 
     /* ========= Derived State ========= */

@@ -232,7 +232,7 @@ button {
 }
 
 /* ===== Project cards (built using grid) ===== */
-.project-card {
+/* .project-card {
     display: grid;
     grid-template-rows: auto 1fr;
     gap: 0.5rem;
@@ -248,29 +248,90 @@ button {
     box-shadow: var(--shadow-sm);
 
     transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+} */
+
+/* ===== Project cards (built using grid) ===== */
+.project-card {
+  position: relative; /* needed for absolute delete button */
+
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 0.5rem;
+
+  text-align: left;
+
+  padding: 1rem 1rem 1.1rem;
+  border-radius: var(--radius-md);
+
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+
+  box-shadow: var(--shadow-sm);
+
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
 /* Nice “sharp app” hover */
 .project-card:hover {
-    transform: translateY(-2px);
-    border-color: color-mix(in srgb, var(--color-accent-primary) 22%, var(--color-border));
-    background-color: var(--color-info-bg);
-    box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-accent-primary) 22%, var(--color-border));
+  background-color: var(--color-info-bg);
+  box-shadow: var(--shadow-md);
 }
 
 /* Titles + descriptions */
 .project-title {
-    margin: 0;
-    font-size: 1.1rem;
-    letter-spacing: -0.01em;
-    color: var(--color-text-primary);
+  margin: 0;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
 }
 
 .project-description {
-    margin: 0;
-    line-height: 1.55;
-    color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
 }
+
+/* ===== Project card delete button (matches .close-task styling) ===== */
+.project-card .project-card-delete {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  font-size: 0.85rem;
+  padding: 0.25rem 0.55rem;
+
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  box-sizing: border-box;
+}
+
+/* Hover state (matches .close-task:hover) */
+.project-card .project-card-delete:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+/* Optional: keyboard focus */
+.project-card .project-card-delete:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-danger) 35%, transparent);
+  outline-offset: 2px;
+}
+
 
 
 
@@ -462,6 +523,18 @@ button {
     font-size: 0.9rem;
 }
 
+/* Delete Button */
+
+.list-header:hover #delete-list {
+  opacity: 1;
+}
+
+#delete-list:hover {
+  background: var(--color-bg-secondary) !important;
+  border-color: color-mix(in srgb, var(--color-danger) 25%, var(--color-border));
+  color: var(--color-danger);
+}
+
 /* ===== Tasks inside a list ===== */
 .task-list {
     list-style: none;
@@ -506,7 +579,7 @@ button {
     width: 10px;
     height: 10px;
     border-radius: 999px;
-    background: var(--color-disabled);
+    background: var(--color-success);
 }
 
 .task-status.status-open {
@@ -715,14 +788,48 @@ button {
 }
 
 .task-field {
-    display: grid;
-    gap: 0.25rem;
+  display: grid;
+  gap: 0.25rem;
 
-    padding: 0.75rem;
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--color-bg-secondary) 70%, var(--color-surface));
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: color-mix(
+    in srgb,
+    var(--color-bg-secondary) 70%,
+    var(--color-surface)
+  );
+
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
 }
+
+/* Hover – subtle, non-interfering */
+.task-field:hover {
+  border-color: color-mix(
+    in srgb,
+    var(--color-border) 60%,
+    var(--color-text-muted)
+  );
+
+  background: color-mix(
+    in srgb,
+    var(--color-bg-secondary) 85%,
+    var(--color-surface)
+  );
+}
+
+/* When an input inside is focused */
+.task-field:focus-within {
+  border-color: var(--color-info);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--color-info) 25%, transparent);
+
+  background: var(--color-bg-secondary);
+}
+
 
 .task-label {
     font-size: 0.8rem;
@@ -745,6 +852,72 @@ button {
     color: var(--color-text-secondary);
     line-height: 1.6;
 }
+
+/* ===== Task card actions (bottom buttons) ===== */
+.task-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* Base style for action buttons (matches pill language) */
+.mark-complete,
+.delete-task {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  font-size: 0.85rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.mark-complete i,
+.delete-task i {
+  font-size: 0.9rem;
+}
+
+/* Hover: complete goes "success" */
+.mark-complete:hover {
+  background: var(--color-success-bg);
+  border-color: color-mix(in srgb, var(--color-success) 30%, var(--color-border));
+  color: var(--color-text-primary);
+}
+
+/* Hover: delete goes "danger" */
+.delete-task:hover {
+  background: var(--color-danger-subtle);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+/* Keyboard focus */
+.mark-complete:focus-visible,
+.delete-task:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-info) 35%, transparent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .task-card-actions {
+    justify-content: stretch;
+  }
+  .mark-complete,
+  .delete-task {
+    flex: 1;
+  }
+}
+
 
 
 

@@ -8,9 +8,7 @@ const genProjectPage = (project) => {
     let explorer = renderer.genExplorer(project.title);
     let explorerTree = explorer.querySelector(".explorer-tree");
     addTaskPane(openedTasks);
-    console.log(explorer)
     project.todolists.forEach(list => {
-        console.log(list.listId)
         let section = explorerTree.appendChild(renderer.genList(list.listId, list.title, list.numTasks));
         
         let currentList = section.querySelector(".task-list");

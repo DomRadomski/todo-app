@@ -118,11 +118,56 @@ export function addProject(title, description = "") {
   return project;
 }
 
+export function removeProjectById(id) {
+  const index = projects.findIndex(
+    project => project.projectId === id
+  );
+
+  if (index === -1) return false;
+
+  projects.splice(index, 1);
+  return true;
+}
+
 export function addList(project, title) {
   const list = new TaskList(title);
   project.addToDo(list);
   return list
 }
+
+export function removeListById(project, id) {
+  project.removeToDoById(id);
+}
+
+export function removeTaskById(currentProject, id) {
+  for (const list of currentProject.todolists) {
+    try {
+      list.removeTaskById(id);
+      return true; // task removed
+    } catch (err) {
+      // task not in this list, keep looking
+    }
+  }
+
+  return false; // task not found in any list
+}
+
+export function findTaskInProject(currentProject, taskId) {
+  for (const list of currentProject.todolists) {
+    const task = list.getTaskById(taskId);
+    if (task) return { list, task };
+  }
+  return null;
+}
+
+export function withTask(currentProject, taskId, fn) {
+  const found = findTaskInProject(currentProject, taskId);
+  if (!found) return false;
+
+  fn(found); // { list, task }
+  return true;
+}
+
 
 export function addTask(list, title, dueDate, priority, notes) {
   if (!list) {
@@ -147,18 +192,6 @@ export function addTask(list, title, dueDate, priority, notes) {
   }
 
   return task;
-}
-
-
-export function removeProjectById(id) {
-  const index = projects.findIndex(
-    project => project.projectId === id
-  );
-
-  if (index === -1) return false;
-
-  projects.splice(index, 1);
-  return true;
 }
 
 export function projectsToJson(projects) {

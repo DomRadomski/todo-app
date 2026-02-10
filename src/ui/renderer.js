@@ -93,21 +93,49 @@ const renderer = (() => {
 
 //===========Home-Projects============//
 
+    // const oldgenProjectCard = ({ projectId, title, desc }) => {
+    //     const titleEl = genElement("h4", "project-title", title);
+    //     const descEl = genElement("p", "project-description", desc);
+
+    //     const card = genElement(
+    //         "article",
+    //         "project-card",
+    //         "",
+    //         [titleEl, descEl]
+    //     );
+
+    //     card.id = projectId;
+
+    //     return card;
+    // };
+
     const genProjectCard = ({ projectId, title, desc }) => {
-        const titleEl = genElement("h4", "project-title", title);
-        const descEl = genElement("p", "project-description", desc);
+        const deleteBtn = genElement(
+            'button',
+            'project-card-delete',
+            '',
+            [genElement('i', ['fa-solid', 'fa-xmark'])]
+        );
+
+        deleteBtn.id = 'delete-project';
+        deleteBtn.type = 'button';
+        deleteBtn.setAttribute('aria-label', 'Delete project');
+
+        const titleEl = genElement('h4', 'project-title', title);
+        const descEl = genElement('p', 'project-description', desc);
 
         const card = genElement(
-            "article",
-            "project-card",
-            "",
-            [titleEl, descEl]
+            'article',
+            'project-card',
+            '',
+            [deleteBtn, titleEl, descEl]
         );
 
         card.id = projectId;
 
         return card;
     };
+
 
     const genProjects = (projects) => {
         console.log("gen projects");
@@ -159,7 +187,7 @@ const renderer = (() => {
 
     //genTaskCard
 
-    const genTaskCard = (id, title, priority, dueDate, isComplete, notes) => {
+    const oldgenTaskCard = (id, title, priority, dueDate, isComplete, notes) => {
         
         const priorityClass = priorityClassMap[priority.label];
         const priorityText = priorityTextMap[priority.label];
@@ -207,11 +235,19 @@ const renderer = (() => {
             genElement('span', 'task-value', formattedDate)
         ]);
         
+        const statusClass = isComplete ? 'complete' : 'incomplete';
+
         // Create status field
-        const statusField = genElement('div', 'task-field', '', [
-            genElement('span', 'task-label', 'Status'),
-            genElement('span', 'task-value', statusText)
-        ]);
+        const statusField = genElement(
+            'div',
+            ['task-field', 'task-card-status', statusClass],
+            '',
+            [
+                genElement('span', 'task-label', 'Status'),
+                genElement('span', 'task-value', statusText)
+            ]
+        );
+
         
         // Create notes field
         const notesField = genElement('div', ['task-field', 'task-notes'], '', [
@@ -237,6 +273,104 @@ const renderer = (() => {
 
         return article;
     };
+
+    const genTaskCard = (id, title, priority, dueDate, isComplete, notes) => {
+        const priorityClass = priorityClassMap[priority.label];
+        const priorityText = priorityTextMap[priority.label];
+
+        const statusText = isComplete ? 'Complete' : 'Incomplete';
+
+        const formattedDate = dueDate.toLocaleDateString('en-GB', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+
+        const priorityBadge = genElement('span', ['task-badge', 'badge-priority', priorityClass], '', [
+            genElement('span', 'badge-dot'),
+            document.createTextNode(priorityText)
+        ]);
+
+        // Close task (header X) - leave as-is
+        const closeTask = genElement('button', 'close-task', '', [
+            genElement('i', ['fa-solid', 'fa-xmark'])
+        ]);
+        closeTask.type = 'button';
+        closeTask.setAttribute('aria-label', 'Close task');
+
+        const badges = genElement('div', 'task-badges', '', [
+            priorityBadge,
+            closeTask
+        ]);
+
+        const header = genElement('header', 'task-card-header', '', [
+            genElement('h3', 'task-card-title', title),
+            badges
+        ]);
+
+        const dueDateField = genElement('div', 'task-field', '', [
+            genElement('span', 'task-label', 'Due date'),
+            genElement('span', 'task-value', formattedDate)
+        ]);
+
+        const statusClass = isComplete ? 'complete' : 'incomplete';
+
+        const statusField = genElement(
+            'div',
+            ['task-field', 'task-card-status', statusClass],
+            '',
+            [
+            genElement('span', 'task-label', 'Status'),
+            genElement('span', 'task-value', statusText)
+            ]
+        );
+
+        const notesField = genElement('div', ['task-field', 'task-notes'], '', [
+            genElement('span', 'task-label', 'Notes'),
+            genElement('p', 'task-notes-text', notes)
+        ]);
+
+        const grid = genElement('div', 'task-card-grid', '', [
+            dueDateField,
+            statusField,
+            notesField
+        ]);
+
+        // ---- NEW: footer actions ----
+        const markCompleteBtn = genElement('button', 'mark-complete', '', [
+            genElement('i', ['fa-solid', 'fa-check']),
+            document.createTextNode(isComplete ? 'Mark Incomplete' : 'Mark Complete')
+        ]);
+        markCompleteBtn.type = 'button';
+        markCompleteBtn.id = 'mark-complete';
+        markCompleteBtn.setAttribute('aria-label', 'Mark complete');
+
+        const deleteTaskBtn = genElement('button', 'delete-task', '', [
+            genElement('i', ['fa-solid', 'fa-trash']),
+            document.createTextNode('Delete Task')
+        ]);
+        deleteTaskBtn.type = 'button';
+        deleteTaskBtn.id = 'delete-task';
+        deleteTaskBtn.setAttribute('aria-label', 'Delete task');
+
+        const actions = genElement('div', 'task-card-actions', '', [
+            markCompleteBtn,
+            deleteTaskBtn
+        ]);
+
+        const article = genElement('article', 'task-card', '', [
+            header,
+            grid,
+            actions
+        ]);
+
+        article.setAttribute('aria-label', 'Task details');
+        article.id = id;
+
+        return article;
+    };
+
 
 
     //genExplorer
@@ -290,8 +424,42 @@ const renderer = (() => {
         return taskExplorer;
     };
 
+    // const oldgenList = (listId, listTitle, numTasks) => {
+    //     // Create toggle button with icon, title, and count
+    //     const toggleButton = genElement('button', 'list-toggle', '', [
+    //         genElement('i', ['fa-solid', 'fa-chevron-down']),
+    //         genElement('span', 'list-name', listTitle),
+    //         genElement('span', 'list-count', numTasks)
+    //     ]);
+    //     toggleButton.type = 'button';
+    //     toggleButton.setAttribute('aria-expanded', 'true');
+
+    //     // Create add task button with icon
+    //     const addButton = genElement('button', 'list-action', '', [
+    //         genElement('i', ['fa-solid', 'fa-plus'])
+    //     ]);
+    //     addButton.type = 'button';
+    //     addButton.setAttribute('aria-label', 'Add task');
+
+    //     // Create header with both buttons
+    //     const header = genElement('div', 'list-header', '', [
+    //         toggleButton,
+    //         addButton
+    //     ]);
+
+    //     // Create list to hold tasks
+    //     const list = genElement('ul', 'task-list');
+    //     //list.style.display = "none";
+
+    //     // Create and return the section
+    //     const section = genElement('section', 'list-group', '', [header, list]);
+    //     section.id = listId;
+        
+    //     return section; // add id to header !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // };
+
     const genList = (listId, listTitle, numTasks) => {
-        // Create toggle button with icon, title, and count
+        // Toggle button (chevron + title + count)
         const toggleButton = genElement('button', 'list-toggle', '', [
             genElement('i', ['fa-solid', 'fa-chevron-down']),
             genElement('span', 'list-name', listTitle),
@@ -300,29 +468,39 @@ const renderer = (() => {
         toggleButton.type = 'button';
         toggleButton.setAttribute('aria-expanded', 'true');
 
-        // Create add task button with icon
+        // Add task button (+)
         const addButton = genElement('button', 'list-action', '', [
             genElement('i', ['fa-solid', 'fa-plus'])
         ]);
         addButton.type = 'button';
         addButton.setAttribute('aria-label', 'Add task');
+        addButton.id = 'add-task'; // optional hook, if you want
 
-        // Create header with both buttons
+        // Delete list button (x) - same styling, different icon
+        const deleteButton = genElement('button', 'list-action', '', [
+            genElement('i', ['fa-solid', 'fa-xmark'])
+        ]);
+        deleteButton.type = 'button';
+        deleteButton.setAttribute('aria-label', 'Delete list');
+        deleteButton.id = 'delete-list'; // hook for event delegation
+
+        // Header row (toggle + actions)
         const header = genElement('div', 'list-header', '', [
             toggleButton,
-            addButton
+            addButton,
+            deleteButton
         ]);
 
-        // Create list to hold tasks
+        // Task container
         const list = genElement('ul', 'task-list');
-        //list.style.display = "none";
 
-        // Create and return the section
+        // Section wrapper
         const section = genElement('section', 'list-group', '', [header, list]);
         section.id = listId;
-        
-        return section; // add id to header !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        return section;
     };
+
 
     //==============//genTask
 
@@ -349,48 +527,48 @@ const renderer = (() => {
 
     //==============Form-Generators=================//
 
-    const genProjectForm = () => {
-        const titleInput = genElement("input");
-        titleInput.type = "text";
-        titleInput.id = "project-title";
-        titleInput.name = "title";
-        titleInput.required = true;
-        titleInput.placeholder = "e.g. Home Renovation";
+    // const genProjectForm = () => {
+    //     const titleInput = genElement("input");
+    //     titleInput.type = "text";
+    //     titleInput.id = "project-title";
+    //     titleInput.name = "title";
+    //     titleInput.required = true;
+    //     titleInput.placeholder = "e.g. Home Renovation";
 
-        const descTextarea = genElement("textarea");
-        descTextarea.id = "project-description";
-        descTextarea.name = "description";
-        descTextarea.rows = 3;
-        descTextarea.placeholder = "Optional description for this project";
+    //     const descTextarea = genElement("textarea");
+    //     descTextarea.id = "project-description";
+    //     descTextarea.name = "description";
+    //     descTextarea.rows = 3;
+    //     descTextarea.placeholder = "Optional description for this project";
 
-        const form = genElement("form", "add-project-form", "", [
-            genElement("div", "form-group", "", [
-            genElement("label", null, "Project title"),
-            titleInput
-            ]),
-            genElement("div", "form-group", "", [
-            genElement("label", null, "Description"),
-            descTextarea
-            ]),
-            genElement("div", "form-actions", "", [
-            genElement("button", ["btn", "btn-primary"], "Add Project")
-            ])
-        ]);
+    //     const form = genElement("form", "add-project-form", "", [
+    //         genElement("div", "form-group", "", [
+    //         genElement("label", null, "Project title"),
+    //         titleInput
+    //         ]),
+    //         genElement("div", "form-group", "", [
+    //         genElement("label", null, "Description"),
+    //         descTextarea
+    //         ]),
+    //         genElement("div", "form-actions", "", [
+    //         genElement("button", ["btn", "btn-primary"], "Add Project")
+    //         ])
+    //     ]);
 
-        // Fix up label associations
-        form.querySelector('label[for]')?.setAttribute("for", "project-title");
-        form.querySelectorAll("label")[1].setAttribute("for", "project-description");
-        form.querySelector("button").type = "submit";
+    //     // Fix up label associations
+    //     form.querySelector('label[for]')?.setAttribute("for", "project-title");
+    //     form.querySelectorAll("label")[1].setAttribute("for", "project-description");
+    //     form.querySelector("button").type = "submit";
 
-        page.appendChild(genElement("section", "add-project", "", [
-            genElement("h2", "section-title", "Add Project"),
-            form
-        ]));
-        }
+    //     page.appendChild(genElement("section", "add-project", "", [
+    //         genElement("h2", "section-title", "Add Project"),
+    //         form
+    //     ]));
+    //     }
 
 
 
-  return { switchPage, genWelcome, genProjects, genProjectForm, genTaskPane, genExplorer, genList, genTask, genTaskCard }
+  return { switchPage, genWelcome, genProjects, genTaskPane, genExplorer, genList, genTask, genTaskCard }
 
 })();
 

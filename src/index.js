@@ -2,7 +2,7 @@ import './index.css';
 import './palette.css';
 import genHome from './ui/home';
 import genProjectPage from './ui/projectPage';
-import { getProjectById, getToDoById, getTaskById, openedTasks, addProject, addList, addTask } from './js/user';
+import { getProjectById, getToDoById, getTaskById, openedTasks, addProject, addList, addTask, removeProjectById, removeListById, removeTaskById, withTask, findTaskInProject } from './js/user';
 import renderer from './ui/renderer';
 import Priority from './js/priority';
 
@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       //loadPage("addProject");
       addProjectForm.classList.toggle('hidden');
     } else if (e.target.closest(".home-button")) {
+      openedTasks.length = 0;
       loadPage("home");
     }
   });
@@ -103,8 +104,14 @@ document.addEventListener("DOMContentLoaded", () => {
   page.addEventListener("click", (e) => {
     
     // Project Stuff
+
+    if(e.target.closest("#delete-project")) {
+      e.stopPropagation();
+      let removeId = e.target.closest("article").id;
+      if(removeProjectById(removeId)) {loadPage("home")}
+    }
     
-    if(e.target.closest(".project-card")) {
+    else if(e.target.closest(".project-card")) {
       currentProject = getProjectById(e.target.closest(".project-card").id);
       console.table(currentProject);
       page.classList.add("content-project");
@@ -112,8 +119,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // List stuff
+    else if(e.target.closest("#delete-list")) { 
+      let removeId = e.target.closest("section").id;
+      removeListById(currentProject, removeId);
+      loadPage("projectPage", currentProject);
+    }
 
-    if(e.target.closest(".list-toggle")) {
+    else if(e.target.closest(".list-toggle")) {
       const listGroup = e.target.closest(".list-group");
       const taskList = listGroup.querySelector(".task-list");
       const numTasks = listGroup.querySelector(".list-count").textContent;
@@ -128,30 +140,114 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add List
 
-    if(e.target.closest(".task-link")) {
-      let taskPane = document.querySelector(".task-pane");
-      // don't like this can maybe fix later by regening task pane everytime and just add this to a task pane list of sorts
+    else if (e.target.closest(".task-link")) {
+      const taskPane = document.querySelector(".task-pane");
 
-      let taskId = e.target.closest(".task-item").id;
-      let listId = e.target.closest(".list-group").id;
-      let list = getToDoById(listId, currentProject);
-      let task = getTaskById(taskId, list);
+      const taskId = e.target.closest(".task-item").id;
+      const listId = e.target.closest(".list-group").id;
+
+      const list = getToDoById(listId, currentProject);
+      const task = getTaskById(taskId, list);
+
+      if (openedTasks.some(t => t.taskId === taskId)) {
+        return;
+      }
+
       openedTasks.push(task);
-      taskPane.appendChild(renderer.genTaskCard(taskId, task.title, task.priority, task.dueDate, task.isComplete, task.notes));
+
+      taskPane.appendChild(
+        renderer.genTaskCard(
+          taskId,
+          task.title,
+          task.priority,
+          task.dueDate,
+          task.isComplete,
+          task.notes
+        )
+      );
     }
+
 
     // Task Stuff
 
+    // Delete task
+
+    // else if (e.target.closest("#delete-task")) {
+    //   e.stopPropagation();
+
+    //   const taskCard = e.target.closest(".task-card");
+    //   if (!taskCard) return;
+
+    //   const taskId = taskCard.id;
+
+    //   if (removeTaskById(currentProject, taskId)) {
+    //     const index = openedTasks.findIndex(task => task.taskId === taskId);
+    //     if (index !== -1) {
+    //       openedTasks.splice(index, 1);
+    //     }
+
+    //     loadPage("projectPage", currentProject);
+    //   } else {
+    //     console.log("couldn't find");
+    //   }
+    // }
+
+    else if (e.target.closest("#delete-task")) {
+      e.stopPropagation();
+
+      const card = e.target.closest(".task-card");
+      if (!card) return;
+
+      const taskId = card.id;
+
+      const ok = withTask(currentProject, taskId, ({ list }) => {
+        list.removeTaskById(taskId);
+      });
+
+      if (ok) {
+        const i = openedTasks.findIndex(t => t.taskId === taskId);
+        if (i !== -1) openedTasks.splice(i, 1);
+
+        loadPage("projectPage", currentProject);
+      } else {
+        console.log("couldn't find");
+      }
+    }
+
+    // Mark task complete 
+
+    else if (e.target.closest("#mark-complete")) {
+      e.stopPropagation();
+
+      const card = e.target.closest(".task-card");
+      if (!card) return;
+
+      const taskId = card.id;
+
+      const ok = withTask(currentProject, taskId, ({ task }) => {
+        task.toggleComplete();
+      });
+
+      if (ok) {
+        // If openedTasks stores Task objects, this auto-updates since it's the same reference.
+        loadPage("projectPage", currentProject);
+      } else {
+        console.log("couldn't find");
+      }
+    }
+
+
+
     // Add Task
 
-    if(e.target.closest(".list-action")) {
+    else if(e.target.closest(".list-action")) {
       addTaskForm.classList.toggle("hidden");
       let listId = e.target.closest(".list-group").id;
       currentList = getToDoById(listId, currentProject);
     }
 
     // Close Task
-    if(e.target.closest(".close-task")) {
+    else if(e.target.closest(".close-task")) {
       let taskCardId = e.target.closest("article").id;
       let taskIndex = openedTasks.findIndex(task => task.taskId === taskCardId);
       
@@ -161,8 +257,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // delete task
+
     //==========Open new list form============
-    if(e.target.closest(".explorer-action")) {
+    else if(e.target.closest(".explorer-action")) {
       newListForm.classList.toggle("hidden");
     }
   })
