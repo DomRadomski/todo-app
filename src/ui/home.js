@@ -1,12 +1,16 @@
 import renderer from "./renderer";
-import { getProjects, projectsToJson } from "../js/user";
+import { getProjects } from "../js/user";
+import { projects } from "../js/user";
 
-let projectJson = projectsToJson(getProjects());
 
 const genHome = () => {
-    projectJson = projectsToJson(getProjects());
-    renderer.genWelcome();
-    renderer.genProjects(projectJson);
+    const projectsContainer = renderer.genWelcome();
+
+    projects.forEach(project => {
+            const card = renderer.genProjectCard(project.projectId, project.title, project.description);
+            projectsContainer.appendChild(card);
+        });
 }
 
 export default genHome;
+

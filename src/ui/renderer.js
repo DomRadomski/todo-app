@@ -84,11 +84,16 @@ const renderer = (() => {
             "Projects"
         );
 
+        const projectsContainer = genElement("div", "projects");
+
         page.append(
             welcomeHeading,
             introParagraph,
-            projectsHeading
+            projectsHeading,
+            projectsContainer
         );
+
+        return projectsContainer;
     }
 
 //===========Home-Projects============//
@@ -109,7 +114,7 @@ const renderer = (() => {
     //     return card;
     // };
 
-    const genProjectCard = ({ projectId, title, desc }) => {
+    const genProjectCard = (projectId, title, desc) => {
         const deleteBtn = genElement(
             'button',
             'project-card-delete',
@@ -137,18 +142,16 @@ const renderer = (() => {
     };
 
 
-    const genProjects = (projects) => {
-        console.log("gen projects");
-        console.table(projects)
-        const projectsContainer = genElement("div", "projects");
+    // const genProjects = (projects) => {
+    //     const projectsContainer = genElement("div", "projects");
 
-        projects.forEach(project => {
-            const card = genProjectCard(project);
-            projectsContainer.appendChild(card);
-        });
+    //     projects.forEach(project => {
+    //         const card = genProjectCard(project);
+    //         projectsContainer.appendChild(card);
+    //     });
 
-        page.appendChild(projectsContainer);
-    };
+    //     page.appendChild(projectsContainer);
+    // };
 
     //============Load-individual-project=============//
 
@@ -568,7 +571,7 @@ const renderer = (() => {
 
 
 
-  return { switchPage, genWelcome, genProjects, genTaskPane, genExplorer, genList, genTask, genTaskCard }
+  return { switchPage, genWelcome, genProjectCard, genTaskPane, genExplorer, genList, genTask, genTaskCard }
 
 })();
 

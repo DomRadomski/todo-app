@@ -7,7 +7,7 @@ class Project {
   #isComplete;
   #projectId;
 
-  constructor(title, description = '') {
+  constructor(title, description = '', todolists=null, isComplete=null, projectId=null) {
     // Title validation
     if (typeof title !== 'string' || title.trim() === '') {
       throw new Error('Project title must be a non-empty string');
@@ -20,9 +20,9 @@ class Project {
 
     this.#title = title.trim();
     this.#description = description;
-    this.#todolists = [];
-    this.#isComplete = false;
-    this.#projectId = crypto.randomUUID();
+    this.#todolists = todolists ?? [];
+    this.#isComplete = isComplete ?? false;
+    this.#projectId = projectId ?? crypto.randomUUID();
     }
 
     /* ========= Getters ========= */
@@ -50,6 +50,20 @@ class Project {
 
     get numLists() {
         return this.todolists.length;
+    }
+
+    toJSON() {
+        return {
+            projectId: this.#projectId,
+            title: this.#title,
+            description: this.#description,
+            isComplete: this.#isComplete,
+            todolists: this.#todolists, // TaskList instances, which serialize via their toJSON getter
+        };
+    }
+
+    static fromJSON({title, description, todolists, isComplete, projectId}) {
+        return new Project(title, description, todolists.fromJSON(), isComplete, projectId)
     }
 
     /* ========= Setters ========= */
@@ -102,28 +116,6 @@ class Project {
     this.removeToDo(list);
   }
 
-    /* ========= Derived State ========= */
-
-    checkCompleted() {
-        return (
-        this.#todolists.length > 0 &&
-        this.#todolists.every(list => list.checkCompleted())
-        );
-    }
-
-    updateCompletionStatus() {
-        this.#isComplete = this.checkCompleted();
-    }
-
-    /* ========= Aggregation ========= */
-
-    get allTasks() {
-        return this.#todolists.flatMap(list => list.tasklist);
-    }
-
-    get overdueTasks() {
-        return this.allTasks.filter(task => task.isOverdue);
-    }
 }
 
 export default Project;

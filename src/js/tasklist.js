@@ -5,15 +5,15 @@ class TaskList {
   #tasks;
   #listId;
 
-  constructor(title) {
+  constructor(title, tasks=null, listId=null) {
     // Title validation
     if (typeof title !== 'string' || title.trim() === '') {
       throw new Error('TaskList title must be a non-empty string');
     }
 
     this.#title = title.trim();
-    this.#tasks = [];
-    this.#listId = crypto.randomUUID();
+    this.#tasks = tasks ?? [];
+    this.#listId = listId ?? crypto.randomUUID();
   }
 
   /* ========= Getters ========= */
@@ -36,17 +36,25 @@ class TaskList {
     return this.#listId;
   }
 
-  /**
-   * A task list is complete if:
-   * - it has at least one task
-   * - every task is complete
-   */
-  get isComplete() {
-    return (
-      this.#tasks.length > 0 &&
-      this.#tasks.every(task => task.isComplete)
-    );
+  toJSON() {
+    return {
+      listId: this.#listId,
+      title: this.#title,
+      tasks: this.#tasks, // each Task has toJSON getter, so it will serialize nicely
+    };
   }
+
+  static fromJSON({title, tasks, listId}) {
+    return new TaskList(title, tasks.fromJSON(), listId);
+  }
+
+
+  // get isComplete() {
+  //   return (
+  //     this.#tasks.length > 0 &&
+  //     this.#tasks.every(task => task.isComplete)
+  //   );
+  // }
 
   /* ========= Setters ========= */
 
@@ -90,29 +98,6 @@ class TaskList {
       throw new Error('Task not found in this TaskList');
     }
     this.removeTask(task);
-  }
-
-
-  /* ========= Derived State ========= */
-
-  checkCompleted() {
-    return this.isComplete;
-  }
-
-  get hasTasks() {
-    return this.#tasks.length > 0;
-  }
-
-  get incompleteTasks() {
-    return this.#tasks.filter(task => !task.isComplete);
-  }
-
-  get completedTasks() {
-    return this.#tasks.filter(task => task.isComplete);
-  }
-
-  get overdueTasks() {
-    return this.#tasks.filter(task => task.isOverdue);
   }
 
 }

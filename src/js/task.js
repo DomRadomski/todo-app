@@ -9,7 +9,7 @@ class Task {
   #isComplete;
   #taskId;
 
-  constructor(title, dueDate, priority = Priority.NORMAL, notes = '') {
+  constructor(title, dueDate, priority = Priority.NORMAL, notes = '', isComplete=null, taskId=null) {
     // Title validation
     if (typeof title !== 'string' || title.trim() === '') {
       throw new Error('Task title must be a non-empty string');
@@ -36,9 +36,9 @@ class Task {
     this.#dueDate = dueDate;
     this.#priority = priority;
     this.#notes = notes;
-    this.#isComplete = false;
-    this.#taskId = crypto.randomUUID();
-  }
+    this.#taskId = taskId ?? crypto.randomUUID();
+    this.#isComplete = isComplete ?? false;
+  } 
 
   /* ========= Getters ========= */
 
@@ -66,15 +66,22 @@ class Task {
     return this.#taskId;
   }
 
-  /**
-   * Derived temporal state
-   */
-  get isOverdue() {
-    return isAfter(new Date(), this.#dueDate);
+  /*======== JSON ============*/
+
+  toJSON() {
+    return {
+      taskId: this.#taskId,
+      title: this.#title,
+      dueDate: this.#dueDate ? this.#dueDate.toISOString() : null,
+      priority: this.#priority,     // "HIGH" | "MEDIUM" | "LOW"
+      notes: this.#notes,
+      isComplete: this.#isComplete,
+    };
   }
 
-  get isUpcoming() {
-    return isAfter(this.#dueDate, new Date());
+  static fromJSON({taskId, title, dueDate, priority, notes, isComplete}) {
+    parsedDueDate = new Date(dueDate);
+    return new Task(title, dueDate, priority, notes, isComplete, taskId)
   }
 
   /* ========= Setters ========= */
@@ -108,20 +115,9 @@ class Task {
     }
     this.#notes = value;
   }
-
-  /* ========= Behavior ========= */
-
-  markComplete() {
-    this.#isComplete = true;
-  }
-
-  markIncomplete() {
-    this.#isComplete = false;
-  }
-
-  toggleComplete() {
-    this.#isComplete = !this.#isComplete;
-  }
 }
+  
+
+
 
 export default Task;

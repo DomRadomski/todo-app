@@ -2,10 +2,11 @@ import './index.css';
 import './palette.css';
 import genHome from './ui/home';
 import genProjectPage from './ui/projectPage';
-import { getProjectById, getToDoById, getTaskById, openedTasks, addProject, addList, addTask, removeProjectById, removeListById, removeTaskById, withTask, findTaskInProject } from './js/user';
+import { STORAGE, getProjectById, getToDoById, getTaskById, openedTasks, addProject, addList, addTask, removeProjectById, removeListById, removeTaskById, withTask, findTaskInProject, projects } from './js/user';
 import renderer from './ui/renderer';
 import Priority from './js/priority';
 
+let firstLoad = true;
 
 const page = document.querySelector(".content");
 const addProjectForm = document.querySelector("div#add-project");
@@ -27,9 +28,12 @@ const loadPage = (route, ...args) => {
   if (!render) throw new Error(`Unknown route: ${route}`);
 
   if (route !== "projectPage") {page.classList = "content"}
-
-  clearContent();
-  render(...args);
+  if (firstLoad) {render(...args); firstLoad = false} // Update projects in local storage
+  else {
+    STORAGE.updateStorage(projects);
+    clearContent(); 
+    render(...args);
+  }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
