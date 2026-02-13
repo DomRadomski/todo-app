@@ -6,7 +6,7 @@ import { STORAGE, getProjectById, getToDoById, getTaskById, openedTasks, addProj
 import renderer from './ui/renderer';
 import Priority from './js/priority';
 
-let firstLoad = true;
+const persist = () => STORAGE.updateStorage(projects);
 
 const page = document.querySelector(".content");
 const addProjectForm = document.querySelector("div#add-project");
@@ -28,12 +28,8 @@ const loadPage = (route, ...args) => {
   if (!render) throw new Error(`Unknown route: ${route}`);
 
   if (route !== "projectPage") {page.classList = "content"}
-  if (firstLoad) {render(...args); firstLoad = false} // Update projects in local storage
-  else {
-    STORAGE.updateStorage(projects);
     clearContent(); 
     render(...args);
-  }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -62,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let proDesc = document.querySelector("#project-description").value;   
 
       addProject(proTitle,proDesc);
-
+      persist();
       loadPage("home");
 
       addProjectForm.classList.toggle("hidden");
@@ -76,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
 
       addList(currentProject, listTitle);
-
+      persist();
       loadPage("projectPage", currentProject);
 
       newListForm.classList.toggle("hidden");
@@ -97,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // TODO: wire this up later
       addTask(currentList, title, dueDate, priority, notes);
-
+      persist();
       loadPage("projectPage", currentProject);
 
       addTaskForm.classList.toggle("hidden");
@@ -112,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(e.target.closest("#delete-project")) {
       e.stopPropagation();
       let removeId = e.target.closest("article").id;
-      if(removeProjectById(removeId)) {loadPage("home")}
+      if(removeProjectById(removeId)) {persist(); loadPage("home")}
     }
     
     else if(e.target.closest(".project-card")) {
@@ -126,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     else if(e.target.closest("#delete-list")) { 
       let removeId = e.target.closest("section").id;
       removeListById(currentProject, removeId);
+      persist();
       loadPage("projectPage", currentProject);
     }
 
@@ -211,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (ok) {
         const i = openedTasks.findIndex(t => t.taskId === taskId);
         if (i !== -1) openedTasks.splice(i, 1);
-
+        persist();
         loadPage("projectPage", currentProject);
       } else {
         console.log("couldn't find");
@@ -234,6 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (ok) {
         // If openedTasks stores Task objects, this auto-updates since it's the same reference.
+        persist();
         loadPage("projectPage", currentProject);
       } else {
         console.log("couldn't find");

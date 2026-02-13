@@ -7,8 +7,10 @@ import TaskList from './tasklist.js';
 import Storage from './storage.js';
 
 const STORAGE = new Storage();
-
-let projects = loadProjectsFromJSON(STORAGE.jsonFromStorage); // Array<Project>
+console.log("console.log(STORAGE.jsonFromStorage)")
+console.log(STORAGE.jsonFromStorage())
+let projects = loadProjectsFromJSON(STORAGE.jsonFromStorage()); // Array<Project>
+console.log(projects)
 let openedTasks = [] // Array<Task>
 
 export {projects, openedTasks, STORAGE}
@@ -197,11 +199,12 @@ export function addTask(list, title, dueDate, priority, notes) {
   return task;
 }
 
-export function loadProjectsFromJSON(raw) {
-  if (!Array.isArray(raw)) return [];
-
-  return raw.map(projectData => Project.fromJSON(projectData));
+export function loadProjectsFromJSON(raw = []) {
+  return Array.isArray(raw)
+    ? raw.map(Project.fromJSON)
+    : [];
 }
+
 
 
 

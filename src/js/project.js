@@ -37,7 +37,7 @@ class Project {
 
     get todolists() {
         // Defensive copy
-        return [...this.#todolists];
+        return this.#todolists;
     }
 
     get isComplete() {
@@ -62,9 +62,13 @@ class Project {
         };
     }
 
-    static fromJSON({title, description, todolists, isComplete, projectId}) {
-        return new Project(title, description, todolists.fromJSON(), isComplete, projectId)
-    }
+    static fromJSON({ projectId, title, description, isComplete, todolists } = {}) {
+        const hydratedLists = Array.isArray(todolists)
+            ? todolists.map(TaskList.fromJSON)
+            : [];
+
+        return new Project(title, description, hydratedLists, isComplete, projectId);
+}   
 
     /* ========= Setters ========= */
 

@@ -68,6 +68,21 @@ class Task {
 
   /*======== JSON ============*/
 
+  static resolvePriority(rawPriority) {
+    if (!rawPriority) return Priority.NORMAL;
+
+    // If it's already one of the enum values, return it
+    if (Object.values(Priority).includes(rawPriority)) {
+      return rawPriority;
+    }
+
+    // Match by value or label
+    return Object.values(Priority).find(p =>
+      p.value === rawPriority.value ||
+      p.label === rawPriority.label
+    ) ?? Priority.NORMAL;
+  }
+
   toJSON() {
     return {
       taskId: this.#taskId,
@@ -80,8 +95,9 @@ class Task {
   }
 
   static fromJSON({taskId, title, dueDate, priority, notes, isComplete}) {
-    parsedDueDate = new Date(dueDate);
-    return new Task(title, dueDate, priority, notes, isComplete, taskId)
+      const parsedDueDate = dueDate ? new Date(dueDate) : null;
+      const resolvedPriority = Task.resolvePriority(priority);
+      return new Task(title, parsedDueDate, resolvedPriority, notes, isComplete, taskId);
   }
 
   /* ========= Setters ========= */
@@ -115,6 +131,11 @@ class Task {
     }
     this.#notes = value;
   }
+
+  toggleComplete() {
+    this.#isComplete = !this.#isComplete;
+  }
+
 }
   
 

@@ -24,7 +24,7 @@ class TaskList {
 
   get tasks() {
     // Defensive copy
-    return [...this.#tasks];
+    return this.#tasks;
   }
 
   get numTasks() {
@@ -44,8 +44,13 @@ class TaskList {
     };
   }
 
-  static fromJSON({title, tasks, listId}) {
-    return new TaskList(title, tasks.fromJSON(), listId);
+  static fromJSON({ listId, title, tasks } = {}) {
+
+    const hydratedTasks = Array.isArray(tasks)
+      ? tasks.map(Task.fromJSON)
+      : [];
+
+    return new TaskList(title, hydratedTasks, listId);
   }
 
 
