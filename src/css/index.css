@@ -87,6 +87,7 @@ button {
 .nav-right {
     display: flex;
     align-items: center;
+    gap: 1rem;
 }
 
 .nav-button {
@@ -112,6 +113,10 @@ button {
 .nav-button:focus-visible {
     outline: 3px solid color-mix(in srgb, var(--color-focus) 35%, transparent);
     outline-offset: 2px;
+}
+
+@media (max-width: 400px) {
+    .nav-button.home-button {display: none;}
 }
 
 /* ===== Content placeholder ===== */
@@ -787,6 +792,7 @@ button {
     }
 }
 
+
 .task-field {
   display: grid;
   gap: 0.25rem;
@@ -916,6 +922,10 @@ button {
   .delete-task {
     flex: 1;
   }
+}
+
+@media (max-width: 400px) {
+    .badge-priority {display: none;}
 }
 
 

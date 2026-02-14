@@ -1,6 +1,6 @@
-import Priority from "./js/priority";
-import Task from "./js/task";
-import TaskList from "./js/tasklist";
+import Priority from "../js/priority";
+import Task from "../js/task";
+import TaskList from "../js/tasklist";
 
 console.log('===== TASK TESTS =====');
 

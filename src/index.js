@@ -1,5 +1,5 @@
-import './index.css';
-import './palette.css';
+import './css/index.css';
+import './css/palette.css';
 import genHome from './ui/home';
 import genProjectPage from './ui/projectPage';
 import { STORAGE, getProjectById, getToDoById, getTaskById, openedTasks, addProject, addList, addTask, removeProjectById, removeListById, removeTaskById, withTask, findTaskInProject, projects } from './js/user';
@@ -45,7 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (e.target.closest(".home-button")) {
       openedTasks.length = 0;
       loadPage("home");
+    } else if (e.target.closest(".nav-left")) {
+      openedTasks.length = 0;
+      loadPage("home");
     }
+
   });
 
   document.addEventListener("submit", (e) => {

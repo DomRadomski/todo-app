@@ -496,6 +496,7 @@ const renderer = (() => {
 
         // Task container
         const list = genElement('ul', 'task-list');
+        list.style.display = "none";
 
         // Section wrapper
         const section = genElement('section', 'list-group', '', [header, list]);
